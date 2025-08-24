@@ -95,7 +95,8 @@ private extension SchoolSearchView {
                     ForEach(viewModel.schools) { school in
                         SchoolRowView(
                             school: school,
-                            searchText: viewModel.searchText
+                            searchText: viewModel.searchText,
+                            isDisabled: viewModel.isSchoolCurrentlySelected(school)
                         ) {
                             viewModel.selectSchool(school)
                         }
@@ -125,10 +126,15 @@ class SchoolSearchViewModel: ObservableObject {
     @Published var showRegistrationModal = false
     @Published var isRegistering = false
     
+    // 현재 선택된 학교 (메인 뷰에서 전달받을 예정)
+    @Published var currentSelectedSchool: School?
+    
     private var cancellables = Set<AnyCancellable>()
     
     init() {
         setupSearchDebounce()
+        // 임시로 현재 선택된 학교 설정 (실제로는 메인 뷰에서 전달받음)
+        currentSelectedSchool = School.mockSchools.first
     }
     
     private func setupSearchDebounce() {
@@ -161,6 +167,12 @@ class SchoolSearchViewModel: ObservableObject {
     }
     
     func selectSchool(_ school: School) {
+        // 현재 선택된 학교는 선택할 수 없음
+        guard school.id != currentSelectedSchool?.id else {
+            print("이미 선택된 학교입니다: \(school.name)")
+            return
+        }
+        
         print("selectSchool called for: \(school.name)")
         selectedSchool = school
         showRegistrationModal = true
@@ -177,6 +189,8 @@ class SchoolSearchViewModel: ObservableObject {
             self?.isRegistering = false
             self?.showRegistrationModal = false
             self?.selectedSchool = nil
+            // 등록 성공 시 현재 선택된 학교 업데이트
+            self?.currentSelectedSchool = school
             print("Successfully registered: \(school.name)")
         }
     }
@@ -184,6 +198,11 @@ class SchoolSearchViewModel: ObservableObject {
     func dismissModal() {
         showRegistrationModal = false
         selectedSchool = nil
+    }
+    
+    /// 학교가 현재 선택된 학교인지 확인
+    func isSchoolCurrentlySelected(_ school: School) -> Bool {
+        return school.id == currentSelectedSchool?.id
     }
 }
 
