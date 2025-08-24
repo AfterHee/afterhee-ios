@@ -50,7 +50,7 @@ extension Color {
     static let afPrimaryLighten = Color(hex: "#FFDED7")
     static let afPrimaryDarken = Color(hex: "#E55031")
     static let afBlack = Color(hex: "#000000")
-    static let afgray900 = Color(hex: "#111111")
+    static let afGray900 = Color(hex: "#111111")
     static let afgray700 = Color(hex: "#434343")
     static let afgray600 = Color(hex: "#515151")
     static let afgray400 = Color(hex: "#8f8f8f")
