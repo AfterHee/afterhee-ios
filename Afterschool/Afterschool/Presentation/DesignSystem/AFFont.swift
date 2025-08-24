@@ -97,12 +97,23 @@ struct LineHeight: ViewModifier {
 }
 
 extension View {
+    /// 뷰의 텍스트에 커스텀 lineHeight를 적용합니다.
+    ///
+    /// 주어진 폰트 크기를 기준으로 줄 간격과 세로 패딩을 조정하여
+    /// 특정 줄 높이를 구현할 수 있습니다.
+    ///
+    /// - Parameters:
+    ///   - lineHeight: 원하는 줄 높이 배수 (예: `1.2` → 120%).
+    ///   - fontSize: 텍스트의 폰트 크기(pt).
+    /// - Returns: 조정된 줄 높이가 적용된 뷰.
+    ///
+    /// ## 사용 예시
+    /// ```swift
+    /// Text("예시 텍스트입니다.")
+    ///     .font(.afBold20)
+    ///     .lineHeight(fontSize: 20, lineHeight: 1.2)
+    /// ```
     func lineHeight(_ lineHeight: CGFloat, fontSize: CGFloat) -> some View {
         self.modifier(LineHeight(fontSize: fontSize, lineHeight: lineHeight))
     }
-    
-    /// 사용법 :
-    // Text("예시 텍스트입니다.")
-    //    .font(.afBold20)
-    //    .lineHeight(fontSize: 20, lineHeight: 1.2)
 }
