@@ -57,6 +57,7 @@ struct NavigationBar<CenterView>: ViewModifier where CenterView: View {
             .ignoresSafeArea(.all, edges: .horizontal)
             .ignoresSafeArea(.all, edges: .bottom)
             content
+                .toolbar(.hidden)
             Spacer()
         }
     }
@@ -79,6 +80,23 @@ extension View {
     }
 }
 
+/// 상단 네비게이션바를 숨기면 스와이프로 뒤로가기가 안되는 문제를 해결
+// CAUTION: 외부 모듈(UIKit)의 프로토콜 UINavigationController을 바로 확장해서 경고 발생
+// TODO: 추후 하위타입으로 구현하는 방식 고려
+extension UINavigationController: UIGestureRecognizerDelegate {
+    fileprivate static var isGestureDisabled: Bool = false
+    
+    override open func viewDidLoad() {
+        super.viewDidLoad()
+        navigationBar.isHidden = true
+        interactivePopGestureRecognizer?.delegate = self
+    }
+
+    public func gestureRecognizerShouldBegin(_ gestureRecognizer: UIGestureRecognizer) -> Bool {
+        return viewControllers.count > 1 && !UINavigationController.isGestureDisabled
+    }
+}
+
 #Preview {
     let demoCenterView = RoundedRectangle(cornerRadius: 8, style: .circular)
         .foregroundStyle(Color.afGray50)
@@ -86,12 +104,17 @@ extension View {
         .padding(.trailing, 16)
         .frame(height: 44)
     
-    
-    VStack {
+    let destinationView = VStack {
         Spacer()
         Text("contentView")
         Spacer()
     }
         .afNavigationBar(centerView: demoCenterView)
 //        .afNavigationBar(title: "학교 변경하기")
+    
+    NavigationStack {
+        NavigationLink("하이") {
+            destinationView
+        }
+    }
 }
