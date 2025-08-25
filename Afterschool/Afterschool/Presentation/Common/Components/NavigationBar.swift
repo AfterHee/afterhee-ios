@@ -36,7 +36,7 @@ struct NavigationBar<CenterView>: ViewModifier where CenterView: View {
                         Image(systemName: "chevron.left")
                             .resizable()
                             .aspectRatio(contentMode: .fit)
-                            .foregroundColor(!inversed ? Color.black : Color.white)
+                            .foregroundColor(!inversed ? Color.afBlack : Color.afWhite)
                             .frame(width: backButtonImageWidth, height: backButtonImageHeight)
                     }
                     
@@ -53,7 +53,7 @@ struct NavigationBar<CenterView>: ViewModifier where CenterView: View {
                     Spacer()
                 }
             }
-            .background(!inversed ? Color.white : inversedBackgroundColor)
+            .background(!inversed ? Color.afWhite : inversedBackgroundColor)
             .ignoresSafeArea(.all, edges: .horizontal)
             .ignoresSafeArea(.all, edges: .bottom)
             
@@ -71,7 +71,7 @@ extension View {
     func afNavigationBar(title: String, inversed: Bool = false) -> some View {
         let titleLabel = Text(title)
             .font(.afSemiBold17)
-            .foregroundStyle(Color.black)
+            .foregroundStyle(Color.afBlack)
         
         return modifier(NavigationBar(
             centerView: titleLabel,
