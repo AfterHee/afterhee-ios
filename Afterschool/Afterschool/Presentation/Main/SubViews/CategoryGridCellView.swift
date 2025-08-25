@@ -21,7 +21,7 @@ struct CategoryGridCellView: View {
                     .resizable()
                     .frame(width: 50, height: 50)
                 Text(category.displayName)
-                    .font(isSelected ? .afBold14 : .afRegular13)
+                    .font(isSelected ? .pretendard(type: .bold, size: 13) : .afRegular13)
                     .lineHeight(1.2, fontSize: 13)
                     .foregroundStyle(Color.afBlack)
             }
