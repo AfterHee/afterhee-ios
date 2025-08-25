@@ -56,9 +56,9 @@ struct NavigationBar<CenterView>: ViewModifier where CenterView: View {
             .background(!inversed ? Color.white : inversedBackgroundColor)
             .ignoresSafeArea(.all, edges: .horizontal)
             .ignoresSafeArea(.all, edges: .bottom)
+            
             content
                 .toolbar(.hidden)
-            Spacer()
         }
     }
 }
