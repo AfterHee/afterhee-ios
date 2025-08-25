@@ -78,6 +78,13 @@ extension View {
             inversed: inversed
         ))
     }
+    
+    func afNavigationBar(inversed: Bool = false) -> some View {
+        return modifier(NavigationBar(
+            centerView: EmptyView(),
+            inversed: inversed
+        ))
+    }
 }
 
 /// 상단 네비게이션바를 숨기면 스와이프로 뒤로가기가 안되는 문제를 해결
