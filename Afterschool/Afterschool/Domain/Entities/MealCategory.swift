@@ -8,6 +8,23 @@
 import SwiftUI
 
 public enum MealCategory: String, CaseIterable, Identifiable, Hashable {
-    case korean, chinese, japanese, western, asian, globalfood, steamed, soup, stirfry, rice, noodle, bread, seafood, meat, vegetable, fastmeal, dessert
+    case korean
+    case chinese
+    case japanese
+    case western
+    case asian
+    case globalfood
+    case steamed
+    case soup
+    case stirfry
+    case rice
+    case noodle
+    case bread
+    case seafood
+    case meat
+    case vegetable
+    case fastmeal
+    case dessert
+    
     public var id: String { rawValue }
 }
