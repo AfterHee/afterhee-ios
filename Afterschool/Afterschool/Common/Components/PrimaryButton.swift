@@ -10,38 +10,61 @@ import SwiftUI
 /// 공통 컴포넌트 버튼
 struct PrimaryButton: View {
     // MARK: - Properties
-    private let label: String
+    private let stringKey: LocalizedStringKey
     private let disabled: Bool
     private let didButtonTapped: () -> Void
     
-    
     init(
-        label: String,
+        _ stringKey: LocalizedStringKey,
         disabled: Bool = false,
-        didButtonTapped: @escaping () -> Void,
-        width: CGFloat = defaultWidth,
-        height: CGFloat = defaultHeight
+        didButtonTapped: @escaping () -> Void
     ) {
-        self.label = label
+        self.stringKey = stringKey
         self.disabled = disabled
         self.didButtonTapped = didButtonTapped
-        self.width = width
-        self.height = height
+    }
+    
+    init(
+        type: DefaultPrimaryButtonType,
+        disabled: Bool = false,
+        didButtonTapped: @escaping () -> Void
+    ) {
+        self.stringKey = type.label
+        self.disabled = disabled
+        self.didButtonTapped = didButtonTapped
     }
     
     var body: some View {
         Button(action: didButtonTapped) {
-            Text(label)
+            Text(stringKey)
                 .font(.afSemiBold18)
                 .foregroundStyle(Color.white)
                 .frame(maxWidth: .infinity, maxHeight: .infinity)
         }
         .disabled(disabled)
         .buttonStyle(PrimaryButtonStyle())
-        .frame(width: width, height: height)
     }
 }
 
+// MARK: - Button Type
+enum DefaultPrimaryButtonType {
+    case findSchool // 우리학교 등록하기
+    case getSuggestion // 추천받기
+    case retry // 다시뽑기
+    
+    var label: LocalizedStringKey {
+        switch self {
+        case .findSchool:
+            return "우리학교 등록하기"
+        case .getSuggestion:
+            return "추천받기"
+        case .retry:
+            return "다시뽑기"
+        }
+    }
+}
+
+// MARK: - ButtonStyle
 /// 공통 컴포넌트 버튼의 스타일. 눌렸을 때 버튼 상태를 정의한다.
 fileprivate struct PrimaryButtonStyle: ButtonStyle {
     @Environment(\.isEnabled) private var isEnabled
@@ -75,6 +98,8 @@ extension View {
         modifier(PrimaryButtonDefaultFrame())
     }
 }
+
+// MARK: - 프리뷰
 #Preview {
     VStack {
         PrimaryButton("테스트") {
@@ -87,8 +112,9 @@ extension View {
         }
         .primaryButtonDefaultFrame()
         
-        PrimaryButton(label: "테스트", disabled: true) {
+        PrimaryButton(type: .findSchool) {
             print("버튼이 눌렸습니다.")
         }
+        .primaryButtonDefaultFrame()
     }
 }
