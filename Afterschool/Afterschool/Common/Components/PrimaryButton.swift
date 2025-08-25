@@ -7,18 +7,13 @@
 
 import SwiftUI
 
-/// 공통 컴포넌트 버튼. 크기를 커스텀하고 싶다면, width와 height를 생성자에 지정한다.
+/// 공통 컴포넌트 버튼
 struct PrimaryButton: View {
     // MARK: - Properties
     private let label: String
     private let disabled: Bool
     private let didButtonTapped: () -> Void
     
-    // MARK: - Constraints
-    private static let defaultWidth: CGFloat = 393
-    private static let defaultHeight: CGFloat = 64
-    private let width: CGFloat
-    private let height: CGFloat
     
     init(
         label: String,
@@ -64,11 +59,33 @@ fileprivate struct PrimaryButtonStyle: ButtonStyle {
     }
 }
 
+// MARK: - Frame 기본값
+struct PrimaryButtonDefaultFrame: ViewModifier {
+    private let defaultWidth: CGFloat = 393
+    private let defaultHeight: CGFloat = 64
+    
+    func body(content: Content) -> some View {
+        content
+            .frame(width: defaultWidth, height: defaultHeight)
+    }
+}
+
+extension View {
+    func primaryButtonDefaultFrame() -> some View {
+        modifier(PrimaryButtonDefaultFrame())
+    }
+}
 #Preview {
     VStack {
-        PrimaryButton(label: "테스트") {
+        PrimaryButton("테스트") {
             print("버튼이 눌렸습니다.")
         }
+        .primaryButtonDefaultFrame()
+        
+        PrimaryButton("테스트", disabled: true) {
+            print("버튼이 눌렸습니다.")
+        }
+        .primaryButtonDefaultFrame()
         
         PrimaryButton(label: "테스트", disabled: true) {
             print("버튼이 눌렸습니다.")
