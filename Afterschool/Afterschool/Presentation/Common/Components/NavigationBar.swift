@@ -23,7 +23,7 @@ struct NavigationBar<CenterView>: ViewModifier where CenterView: View {
     private let backButtonImageWidth: CGFloat = 15
     private let backButtonImageHeight: CGFloat = 21
     private let navBarHeight: CGFloat = 76
-    private let horizontalPadding: CGFloat = 20
+    private let horizontalPadding: CGFloat = 18
     private let inversedBackgroundColor: Color = Color(hex: "545454")
     
     func body(content: Content) -> some View {
