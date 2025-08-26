@@ -62,7 +62,7 @@ struct LoadingAndResultView: View {
                 }
             }
         }
-        .onAppear {
+        .onAppear { // TODO: 디버그 용 결과 표출 로직. 유즈케이스 구현 후 제거.
             DispatchQueue.main.asyncAfter(deadline: .now() + 3.0) {
                 viewModel.recommendationMenuName = "뿌링클"
             }
