@@ -84,12 +84,11 @@ fileprivate struct PrimaryButtonStyle: ButtonStyle {
 
 // MARK: - Frame 기본값
 struct PrimaryButtonDefaultFrame: ViewModifier {
-    private let defaultWidth: CGFloat = 393
     private let defaultHeight: CGFloat = 64
     
     func body(content: Content) -> some View {
         content
-            .frame(width: defaultWidth, height: defaultHeight)
+            .frame(height: defaultHeight)
     }
 }
 
