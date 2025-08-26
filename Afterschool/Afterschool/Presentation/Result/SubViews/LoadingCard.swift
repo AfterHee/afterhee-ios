@@ -26,7 +26,9 @@ struct LoadingCard: View {
     /// 처음 뷰가 뜨면 애니메이션이 바로 시작되므로 초깃값 false
     @State private var animationStopped = false
     
-    // MARK: - Computed Properties
+    // MARK: - Properties
+    let handleAnimationStopped: () -> Void
+    
     private var imageResource: ImageResource {
         showingRecommendation == nil ? .loadingCard : .resultCard
     }
@@ -42,12 +44,10 @@ struct LoadingCard: View {
     // MARK: - Constraints
     private let baseCardSize: CGSize = .init(width: 189, height: 249)
     private let deactivatedImageScale: CGFloat = 0.9
-    private let animationDuration: Double = 1.0
+    private let animationDuration: Double = 0.7
     
     var body: some View {
         ZStack {
-            // TODO: 여기에 배경 모션
-            
             Image(imageResource)
                 .resizable()
                 .scaledToFit()
@@ -64,9 +64,18 @@ struct LoadingCard: View {
             }
             .onChange(of: animationStopped) { _, isStopped in // 애니메이션 중단 후
                 if isStopped {
+                    handleAnimationStopped()
+                    
                     withAnimation {
                         showingRecommendation = recommendation
                     }
+                }
+            }
+            .onChange(of: recommendation) { oldValue, newValue in
+                if newValue == nil {
+                    showingRecommendation = nil
+                    animationStopped = false
+                    startFloat()
                 }
             }
     }
@@ -116,7 +125,7 @@ fileprivate enum LoadingCardAnimationState {
     var yOffset: CGFloat {
         switch self {
         case .up:
-            return -80
+            return -25
         case .zero:
             return 0
         }
@@ -146,7 +155,7 @@ fileprivate enum LoadingCardAnimationState {
                 
                 Spacer()
                 
-                LoadingCard(recommendation: $recommendation)
+                LoadingCard(recommendation: $recommendation, handleAnimationStopped: { })
             }
         }
     }
