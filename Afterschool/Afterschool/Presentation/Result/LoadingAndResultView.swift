@@ -24,6 +24,7 @@ struct LoadingAndResultView: View {
             backgroundColor
                 .ignoresSafeArea()
             
+            LoadingAndResultViewNavigationBar()
             
             VStack(spacing: 0) {
                 Spacer()
