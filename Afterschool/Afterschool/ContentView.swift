@@ -12,7 +12,6 @@ struct ContentView: View {
     
     var body: some View {
         MainView(deps: container.mainDepsProvider)
-        .environment(\.diContainer, DIContainer())
     }
 }
 

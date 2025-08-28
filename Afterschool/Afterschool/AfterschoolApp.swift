@@ -12,6 +12,7 @@ struct AfterschoolApp: App {
     var body: some Scene {
         WindowGroup {
             ContentView()
+                .environment(\.diContainer, DIContainer())
         }
     }
 }
