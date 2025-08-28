@@ -8,30 +8,13 @@
 import Foundation
 import SwiftUI
 
-protocol LoadingAndResultViewModelProtocol {
-    var recommendationMenuName: String? { get set }
-    var isFloatingAnimationStopped: Bool { get }
-    var retryCount: Int { get }
-    var isLoading: Bool { get }
-    var backgroundEffectOpacity: CGFloat { get }
-    var tryCount: Int { get }
-    var retryButtonLabel: LocalizedStringKey { get }
-    var retryButtonActivated: Bool { get }
-    
-    func loadingAnimationFinihed()
-    func animateAfterLoadingAnimationFinihed()
-    func retryButtonTapped()
-    func viewAppeared()
-}
-
-@Observable
-class LoadingAndResultViewModel: LoadingAndResultViewModelProtocol {
-    var recommendationMenuName: String?
-    private(set) var isFloatingAnimationStopped = false
-    private(set) var retryCount = 0
-    private(set) var isLoading = true
-    private(set) var backgroundEffectOpacity: CGFloat = 0
-    private(set) var tryCount = 0
+class LoadingAndResultViewModel: ObservableObject {
+    @Published var recommendationMenuName: String?
+    @Published private(set) var isFloatingAnimationStopped = false
+    @Published private(set) var retryCount = 0
+    @Published private(set) var isLoading = true
+    @Published private(set) var backgroundEffectOpacity: CGFloat = 0
+    @Published private(set) var tryCount = 0
     
     var retryButtonLabel: LocalizedStringKey {
         retryCount >= 5

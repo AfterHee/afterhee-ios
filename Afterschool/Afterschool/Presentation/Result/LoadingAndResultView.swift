@@ -9,10 +9,10 @@ import SwiftUI
 
 struct LoadingAndResultView: View {
     // MARK: - Properties
-    @State private var viewModel: LoadingAndResultViewModelProtocol
+    @StateObject private var viewModel: LoadingAndResultViewModel
     
     init(viewModel: LoadingAndResultViewModel = LoadingAndResultViewModel()) {
-        self.viewModel = viewModel
+        self._viewModel = .init(wrappedValue: viewModel)
     }
     
     // MARK: - Constraints
