@@ -26,79 +26,65 @@ struct RegistrationModal: View {
                 }
             
             // 모달 컨텐츠
-            VStack(spacing: 0) {
-                // 상단 섹션
-                VStack(spacing: 20) {
-                    // 헤더 (X 버튼)
-                    HStack {
-                        Spacer()
-                        Button(action: onDismiss) {
-                            Image(systemName: "xmark")
-                                .font(.system(size: 20, weight: .medium))
-                                .foregroundColor(.afBlack)
-                        }
-                        .padding(.trailing, -16)
+            VStack {
+                HStack {
+                    Spacer()
+                    Button(action: onDismiss) {
+                        Image(systemName: "xmark")
+                            .font(.system(size: 20, weight: .medium))
+                            .foregroundColor(.afGray600)
                     }
-                    
-                    Image(.schoolIcon)
-                        .padding(.bottom, 20)
-                        
                 }
-                .padding(.horizontal, 24)
-                .padding(.top, 24)
+                .padding(.top, 16)
+                .padding(.trailing, 16)
                 
-                // 중앙 섹션 (질문)
-                VStack(spacing: 20) {
-                    // 질문 텍스트
-                    Text("이 학교로 변경하시겠습니까?")
-                        .font(.afSemiBold18)
+                Image(.schoolIcon)
+                
+                Spacer().frame(height: 20)
+                
+                // TODO: 등록/변경 분기 필요
+                Text("이 학교로 변경하시겠습니까?")
+                    .font(.afSemiBold18)
+                    .lineHeight(1.5, fontSize: 18)
+                    .foregroundColor(.afBlack)
+                    .multilineTextAlignment(.center)
+                    .lineLimit(2)
+                
+                Spacer().frame(height: 24)
+                // 학교 정보 카드 (너비 자동 조절)
+                VStack(spacing: 3) {
+                    Text(school.name)
+                        .font(.afSemiBold17)
+                        .lineHeight(1.5, fontSize: 17)
                         .foregroundColor(.afBlack)
-                        .multilineTextAlignment(.center)
-                        .lineLimit(2)
-                    
-                    // 학교 정보 카드 (너비 자동 조절)
-                    VStack(spacing: 8) {
-                        Text(school.name)
-                            .font(.afSemiBold17)
-                            .foregroundColor(.afBlack)
-                        
-                        Text(school.address)
-                            .font(.afRegular13)
-                            .foregroundColor(.afGray700)
-                    }
-                    .padding(.vertical, 20)
-                    .padding(.horizontal, 16)
-                    .background(Color.afGray50)
-                    .cornerRadius(12)
-                    .frame(maxWidth: .infinity)
+                    Text(school.address)
+                        .font(.afRegular13)
+                        .lineHeight(1.2, fontSize: 13)
+                        .foregroundColor(.afBlack)
                 }
+                .padding(.vertical, 12)
                 .padding(.horizontal, 24)
+                .background(Color.afGray50)
+                .cornerRadius(12)
+                Spacer().frame(height: 24)
                 
-                // 하단 섹션 (액션 버튼)
-                VStack(spacing: 0) {
-                    // 회색 구분선
-                    Divider()
-                        .background(Color.afGray100)
-                        .padding(.top, 24)
-                        .padding(.bottom, 20)
-                    
-                    // 변경하기 버튼
-                    Button(action: onRegister) {
+                Divider()
+                    .background(Color.afGray100)
+                // 변경하기 버튼
+                Button(action: onRegister) {
+                    VStack {
+                        Spacer().frame(height: 20)
                         Text("변경하기")
                             .font(.afMedium16)
-                            .foregroundColor(.afBlack)
-                            .frame(maxWidth: .infinity)
-                            .padding(.bottom, 30)
-                            .background(Color.afWhite)
-                            .cornerRadius(0)
+                            .foregroundColor(.afGray600)
+                        Spacer().frame(height: 20)
                     }
-                    .buttonStyle(PlainButtonStyle())
+                    .frame(maxWidth: .infinity)
                 }
             }
             .background(Color.afWhite)
-            .frame(width: 321, height: 321)
             .cornerRadius(12)
-//            .padding(.horizontal, 20)
+            .padding(.horizontal, 36)
         }
     }
 }
