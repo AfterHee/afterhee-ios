@@ -33,7 +33,23 @@
 		EED2B96B2E5B560700084CB0 /* Exceptions for "Afterschool" folder in "Afterschool" target */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
+				Application/DIContainer/.gitkeep,
+				Common/.gitkeep,
+				Data/Network/.gitkeep,
+				Data/PersistentStorages/.gitkeep,
+				Data/Repositories/.gitkeep,
+				Domain/Entities/.gitkeep,
+				Domain/Interfaces/Repositories/.gitkeep,
+				Domain/UseCases/.gitkeep,
 				Info.plist,
+				Infrastructure/Network/.gitkeep,
+				Presentation/Common/.gitkeep,
+				Presentation/DesignSystem/.gitkeep,
+				Presentation/Result/SubViews/.gitkeep,
+				Presentation/School/Change/.gitkeep,
+				Presentation/School/Register/.gitkeep,
+				Presentation/School/SubViews/.gitkeep,
+				Resource/Fonts/.gitkeep,
 			);
 			target = EE29B1082E540DE2009CF9D0 /* Afterschool */;
 		};
