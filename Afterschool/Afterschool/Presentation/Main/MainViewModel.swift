@@ -7,7 +7,18 @@
 
 import Foundation
 
+protocol MainViewModelProtocol {
+    var schoolName: String { get }
+    var selectedCategory: MealCategory? { get }
+    var shouldShowOnboarding: Bool { get }
+    var menus: [DailyMenu] { get }
+    var selectedMenuIndex: Int { get }
+    var categories: [MealCategory] { get }
+}
+
 final class MainViewModel: ObservableObject {
+    private let getOnboarindgShownUseCase: GetOnboardingShownUseCase
+    
     @Published var schoolName: String = "애플고등학교"
     @Published var selectedCategory: MealCategory? = nil
     @Published var shouldShowOnboarding: Bool = false
@@ -43,6 +54,10 @@ final class MainViewModel: ObservableObject {
     
     let categories: [MealCategory] = MealCategory.allCases
     
+    init(getOnboarindgShownUseCase: GetOnboardingShownUseCase) {
+        self.getOnboarindgShownUseCase = getOnboarindgShownUseCase
+    }
+    
     func selectCategory(_ category: MealCategory) {
         selectedCategory = (selectedCategory == category) ? nil : category // 선택한 카테고리 한 번 더 선택시 미선택(nil)으로 변경
     }
@@ -53,5 +68,9 @@ final class MainViewModel: ObservableObject {
     
     func getRecommendationButtonTapped() {
         print("추천 받기 버튼이 눌렸습니다.")
+    }
+    
+    func mainViewAppeared() {
+        shouldShowOnboarding = !getOnboarindgShownUseCase.execute()
     }
 }

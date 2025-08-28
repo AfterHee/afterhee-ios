@@ -8,7 +8,11 @@
 import SwiftUI
 
 struct MainView: View {
-    @StateObject private var viewModel = MainViewModel()
+    @StateObject private var viewModel: MainViewModel
+    
+    init(deps: MainDepsProviding) {
+        self._viewModel = StateObject(wrappedValue: deps.getMainViewModel())
+    }
     
     var body: some View {
         NavigationStack {
@@ -18,7 +22,7 @@ struct MainView: View {
                 ZStack {
                     ScrollView {
                         VStack(spacing: 56) {
-                            VStack(alignment: .leading, spacing: 16) {
+                            VStack(alignment: .leading, spacing: 16) { 
                                 SchoolHeaderView(viewModel: viewModel)
                                 MealSectionView(viewModel: viewModel)
                             }
@@ -41,11 +45,20 @@ struct MainView: View {
             }
         }
         .onAppear {
-            viewModel.shouldShowOnboarding = !UserDefaults.standard.bool(forKey: UserDefaultsKey.onboardingShown.rawValue)
+            viewModel.mainViewAppeared()
         }
     }
 }
 
 #Preview {
-    MainView()
+    struct MainViewWrapper: View {
+        @Environment(\.diContainer) var diContainer
+        
+        var body: some View {
+            MainView(deps: diContainer.mainDepsProvider)
+        }
+    }
+    
+    return MainViewWrapper()
+        .environment(\.diContainer, DIContainer())
 }
