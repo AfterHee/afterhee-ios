@@ -15,7 +15,7 @@ struct MainView: View {
     }
     
     var body: some View {
-        NavigationStack {
+        Group {
             if viewModel.shouldShowOnboarding {
                 OnboardingView(shouldShowOnboarding: $viewModel.shouldShowOnboarding)
             } else {

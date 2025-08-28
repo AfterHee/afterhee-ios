@@ -11,7 +11,7 @@ import SwiftUI
 struct AfterschoolApp: App {
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            AppView()
                 .environment(\.diContainer, DIContainer())
         }
     }

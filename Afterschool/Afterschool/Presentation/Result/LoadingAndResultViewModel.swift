@@ -7,14 +7,31 @@
 
 import Foundation
 import SwiftUI
+import os.log
 
-class LoadingAndResultViewModel: ObservableObject {
+final class LoadingAndResultViewModel: ObservableObject {
+    let category: MealCategory
+    var skipMenus: [String]
+    let getRecommendationUseCase: GetRecommendationUseCase
+    private let logger = Logger.makeOf("LoadingAndResultViewModel")
+    
+    init(
+        category: MealCategory,
+        skipMenus: [String],
+        getRecommendationUseCase: GetRecommendationUseCase
+    ) {
+        self.category = category
+        self.skipMenus = skipMenus
+        self.getRecommendationUseCase = getRecommendationUseCase
+    }
+    
     @Published var recommendationMenuName: String?
     @Published private(set) var isFloatingAnimationStopped = false
     @Published private(set) var retryCount = 0
     @Published private(set) var isLoading = true
     @Published private(set) var backgroundEffectOpacity: CGFloat = 0
     @Published private(set) var tryCount = 0
+    @Published var isError = false
     
     var retryButtonLabel: LocalizedStringKey {
         retryCount >= 5
@@ -25,7 +42,10 @@ class LoadingAndResultViewModel: ObservableObject {
     var retryButtonActivated: Bool {
         !isLoading && retryCount < 5
     }
-    
+}
+
+/// User Intents, View Life Cycle
+extension LoadingAndResultViewModel {
     /// 로딩 애니메이션이 끝난 뒤 상태 변경
     func loadingAnimationFinihed() {
         isLoading = false
@@ -45,18 +65,34 @@ class LoadingAndResultViewModel: ObservableObject {
         isLoading = true
         backgroundEffectOpacity = 0
         
-        DispatchQueue.main.asyncAfter(deadline: .now() + 3.0) { [weak self] in
-            self?.tryCount += 1
-            self?.recommendationMenuName = "뿌링클"
-        }
+        requestRecommendationMenu()
     }
     
     /// 뷰 노출 핸들러
     func viewAppeared() {
-        // TODO: 디버그 용 결과 표출 로직. 유즈케이스 구현 후 제거.
-        DispatchQueue.main.asyncAfter(deadline: .now() + 3.0) { [weak self] in
-            self?.tryCount += 1
-            self?.recommendationMenuName = "뿌링클"
+        requestRecommendationMenu()
+    }
+}
+
+extension LoadingAndResultViewModel {
+    func requestRecommendationMenu() {
+        isError = false
+        
+        Task.detached { [weak self] in
+            guard let self else { return }
+            
+            do {
+                let recommendation = try await getRecommendationUseCase.execute(category: category, skipMenus: skipMenus)
+                
+                skipMenus.append(recommendation)
+                
+                await MainActor.run {
+                    self.recommendationMenuName = recommendation
+                }
+            } catch {
+                logger.error("❌ failed to get recommendation menu: \(error)")
+                isError = true
+            }
         }
     }
 }

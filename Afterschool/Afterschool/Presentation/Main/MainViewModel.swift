@@ -8,6 +8,7 @@
 import Foundation
 
 final class MainViewModel: ObservableObject {
+    private var navigationRouter: NavigationRouter
     private let getOnboarindgShownUseCase: GetOnboardingShownUseCase
     private let getMealUseCase: GetMealsUseCase
     private let getSelectedSchool: GetSelectedSchoolUseCase
@@ -26,7 +27,10 @@ final class MainViewModel: ObservableObject {
         getOnboarindgShownUseCase: GetOnboardingShownUseCase,
         getMealUseCase: GetMealsUseCase,
         getSelectedSchool: GetSelectedSchoolUseCase,
+
+        navigationRouter: NavigationRouter,
     ) {
+        self.navigationRouter = navigationRouter
         self.getOnboarindgShownUseCase = getOnboarindgShownUseCase
         self.getMealUseCase = getMealUseCase
         self.getSelectedSchool = getSelectedSchool
@@ -43,6 +47,7 @@ final class MainViewModel: ObservableObject {
     
     func schoolChangeButtonTapped() {
         print("학교 변경 버튼이 눌렸습니다.")
+        navigationRouter.push(.schoolSetting(isOnboarding: true))
     }
     
     func getRecommendationButtonTapped() {
