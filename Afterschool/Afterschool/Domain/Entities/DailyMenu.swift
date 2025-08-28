@@ -7,14 +7,9 @@
 
 import Foundation
 
-public struct DailyMenu: Identifiable, Hashable, Sendable {
-    public let id: String
-    public let date: Date
-    public let items: [MenuItem]
-
-    public init(id: String = UUID().uuidString, date: Date, items: [MenuItem]) {
-        self.id = id
-        self.date = date
-        self.items = items
-    }
+struct DailyMenu: Identifiable, Hashable {
+    let id = UUID()
+    let date: Date
+    let items: [MenuItem]
 }
+

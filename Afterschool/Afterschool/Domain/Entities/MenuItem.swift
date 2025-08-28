@@ -7,12 +7,6 @@
 
 import Foundation
 
-public struct MenuItem: Identifiable, Hashable, Sendable {
-    public let id: String
-    public let name: String
+struct MenuItem: Identifiable, Hashable { let id = UUID(); let name: String }
 
-    public init(id: String = UUID().uuidString, name: String) {
-        self.id = id
-        self.name = name
-    }
-}
+
