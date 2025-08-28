@@ -8,7 +8,7 @@
 import Foundation
 
 /// 학교 정보를 담는 엔티티
-struct School: Identifiable, Equatable {
+struct School: Identifiable, Codable, Equatable {
     let id: String
     let name: String
     let address: String

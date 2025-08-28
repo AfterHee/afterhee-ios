@@ -14,7 +14,7 @@ struct GetSelectedSchoolUseCase {
         self.userDefaultRepository = userDefaultRepository
     }
     
-    func execute() -> SchoolSelection? {
-        userDefaultRepository.load(SchoolSelection.self, forKey: .selectedSchool)
+    func execute() -> School? {
+        userDefaultRepository.load(School.self, forKey: .selectedSchool)
     }
 }

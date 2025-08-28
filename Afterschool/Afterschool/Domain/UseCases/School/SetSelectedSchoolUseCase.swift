@@ -14,7 +14,7 @@ struct SetSelectedSchoolUseCase {
         self.userDefaultRepository = userDefaultRepository
     }
     
-    func execute(school: SchoolSelection) throws {
+    func execute(school: School) throws {
         do {
             try userDefaultRepository.save(school, forKey: .selectedSchool)
         } catch {
