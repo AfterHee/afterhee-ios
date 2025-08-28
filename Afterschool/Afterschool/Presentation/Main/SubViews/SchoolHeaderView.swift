@@ -21,8 +21,7 @@ struct SchoolHeaderView: View {
                 .lineHeight(1.5, fontSize: 18)
                 .foregroundStyle(Color.afGray900)
             Button {
-                print("school change button tapped")
-                viewModel.schoolChangeButtonTapped = true
+                viewModel.schoolChangeButtonTapped()
             } label: {
                 Image(systemName: "arrow.left.arrow.right")
                     .resizable()
