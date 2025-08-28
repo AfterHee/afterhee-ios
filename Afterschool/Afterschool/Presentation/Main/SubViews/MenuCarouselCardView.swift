@@ -7,15 +7,6 @@
 
 import SwiftUI
 
-private extension DailyMenu {
-    var dateFormatted: String {
-        let f = DateFormatter()
-        f.locale = .init(identifier: "ko_KR")
-        f.dateFormat = "M월 d일(E)"
-        return f.string(from: date)
-    }
-}
-
 struct MenuCarouselCardView: View {
     let menu: DailyMenu
     let relativeLabel: String

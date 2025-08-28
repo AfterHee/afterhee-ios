@@ -13,15 +13,6 @@ private extension Array {
     }
 }
 
-private extension DailyMenu {
-    var dateFormatted: String {
-        let f = DateFormatter()
-        f.locale = .init(identifier: "ko_KR")
-        f.dateFormat = "M월 d일(E)"
-        return f.string(from: date)
-    }
-}
-
 struct MenuCarouselView: View {
     let menus: [DailyMenu]                   // [어제, 오늘, 내일] (최대 3개 가정)
     @Binding var selectedIndex: Int          // 0: 어제, 1: 오늘, 2: 내일
