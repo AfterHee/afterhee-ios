@@ -8,6 +8,7 @@
 import Foundation
 
 final class MainViewModel: ObservableObject {
+    private var navigationRouter: NavigationRouter
     private let getOnboarindgShownUseCase: GetOnboardingShownUseCase
     
     @Published var schoolName: String = "애플고등학교"
@@ -45,7 +46,11 @@ final class MainViewModel: ObservableObject {
     
     let categories: [MealCategory] = MealCategory.allCases
     
-    init(getOnboarindgShownUseCase: GetOnboardingShownUseCase) {
+    init(
+        navigationRouter: NavigationRouter,
+        getOnboarindgShownUseCase: GetOnboardingShownUseCase
+    ) {
+        self.navigationRouter = navigationRouter
         self.getOnboarindgShownUseCase = getOnboarindgShownUseCase
     }
     
@@ -55,6 +60,7 @@ final class MainViewModel: ObservableObject {
     
     func schoolChangeButtonTapped() {
         print("학교 변경 버튼이 눌렸습니다.")
+        navigationRouter.push(.schoolSetting(isOnboarding: true))
     }
     
     func getRecommendationButtonTapped() {
