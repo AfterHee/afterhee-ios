@@ -8,7 +8,13 @@
 
 import Foundation
 
-class MainServerRepository {
+protocol MainServerRepositoryProtocol {
+    func getSchools(keyword: String) async throws -> BaseResponseDTO<[SchoolDTO]>
+    func getMeals(eduOfficeCode: String, schoolCode: String, from: Date, to: Date) async throws -> BaseResponseDTO<[MealDTO]>
+    func getSuggest(category: String, skipMenus: [String]) async throws -> BaseResponseDTO<SuggestDTO>
+}
+
+class MainServerRepository: MainServerRepositoryProtocol {
     let network: Network
     
     init(network: Network = Network()) {
