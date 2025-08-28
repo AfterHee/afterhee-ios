@@ -9,7 +9,7 @@ import SwiftUI
 
 struct LoadingAndResultView: View {
     // MARK: - Properties
-    @State private var viewModel: LoadingAndResultViewModel
+    @State private var viewModel: LoadingAndResultViewModelProtocol
     
     init(viewModel: LoadingAndResultViewModel = LoadingAndResultViewModel()) {
         self.viewModel = viewModel
@@ -39,9 +39,7 @@ struct LoadingAndResultView: View {
                         
                         LoadingCard(recommendation: $viewModel.recommendationMenuName) {
                             // 애니메이션 종료 후 수행할 일
-                            viewModel.isLoading = false
-                            viewModel.isFloatingAnimationStopped = true
-                            viewModel.retryCount += 1
+                            viewModel.loadingAnimationFinihed()
                         }
                     }
                 }
@@ -55,29 +53,26 @@ struct LoadingAndResultView: View {
                 
                 if viewModel.retryCount > 0 {
                     PrimaryButton(type: .retry, disabled: viewModel.isLoading) {
-                        viewModel.retryTapped()
+                        viewModel.retryButtonTapped()
                     }
                     .primaryButtonDefaultFrame()
                     .padding(.horizontal, 16)
                 }
             }
         }
-        .onAppear { // TODO: 디버그 용 결과 표출 로직. 유즈케이스 구현 후 제거.
-            DispatchQueue.main.asyncAfter(deadline: .now() + 3.0) {
-                viewModel.recommendationMenuName = "뿌링클"
-            }
+        .onAppear {
+            viewModel.viewAppeared()
         }
         .onChange(of: viewModel.isFloatingAnimationStopped) { oldValue, newValue in
+            // 로딩 애니메이션 종료 후 애니메이션
             if newValue {
                 withAnimation(.easeInOut(duration: animationDuration)) {
-                    viewModel.backgroundEffectOpacity = 1.0
+                    viewModel.animateAfterLoadingAnimationFinihed()
                 }
             }
         }
     }
 }
-
-
 
 #Preview {
     LoadingAndResultView()
