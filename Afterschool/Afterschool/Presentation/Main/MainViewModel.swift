@@ -6,12 +6,15 @@
 //
 
 import Foundation
+import os.log
 
 final class MainViewModel: ObservableObject {
     private var navigationRouter: NavigationRouter
+    private let setOnboarindgShownUseCase: SetOnboardingShownUseCase
     private let getOnboarindgShownUseCase: GetOnboardingShownUseCase
     private let getMealUseCase: GetMealsUseCase
     private let getSelectedSchool: GetSelectedSchoolUseCase
+    private let logger = Logger.makeOf("MainViewModel")
     
     @Published var schoolName: String = "학교를 선택해 주세요"
     @Published var selectedCategory: MealCategory? = nil
@@ -24,6 +27,7 @@ final class MainViewModel: ObservableObject {
     let categories: [MealCategory] = MealCategory.allCases
     
     init(
+        setOnboarindgShownUseCase: SetOnboardingShownUseCase,
         getOnboarindgShownUseCase: GetOnboardingShownUseCase,
         getMealUseCase: GetMealsUseCase,
         getSelectedSchool: GetSelectedSchoolUseCase,
@@ -31,14 +35,20 @@ final class MainViewModel: ObservableObject {
         navigationRouter: NavigationRouter,
     ) {
         self.navigationRouter = navigationRouter
+        self.setOnboarindgShownUseCase = setOnboarindgShownUseCase
         self.getOnboarindgShownUseCase = getOnboarindgShownUseCase
         self.getMealUseCase = getMealUseCase
         self.getSelectedSchool = getSelectedSchool
         
-        guard let selectedSchool = getSelectedSchool.execute() else {
-            fatalError("Selected school must exist before MainViewModel initialization.")
+        if let selectedSchool = getSelectedSchool.execute() {
+            self.schoolName = selectedSchool.name
+        } else {
+            do {
+                try setOnboarindgShownUseCase.execute(value: false)
+            } catch {
+                logger.error("❌ setOnboarindgShownUseCase failed: \(error)")
+            }
         }
-        self.schoolName = selectedSchool.name
     }
     
     func selectCategory(_ category: MealCategory) {
@@ -56,7 +66,9 @@ final class MainViewModel: ObservableObject {
     
     func mainViewAppeared() {
         shouldShowOnboarding = !getOnboarindgShownUseCase.execute()
-        Task { await refreshMenus() }
+        Task { @MainActor in
+            await refreshMenus()
+        }
     }
     
     func refreshMenus(today: Date = Date()) async {

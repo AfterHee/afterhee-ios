@@ -8,16 +8,18 @@
 import SwiftUI
 
 struct MainView: View {
+    @ObservedObject private var navigationRouter: NavigationRouter
     @StateObject private var viewModel: MainViewModel
     
     init(deps: MainDepsProviding) {
+        self._navigationRouter = ObservedObject(wrappedValue: deps.navigationRouter)
         self._viewModel = StateObject(wrappedValue: deps.getMainViewModel())
     }
     
     var body: some View {
         Group {
             if viewModel.shouldShowOnboarding {
-                OnboardingView(shouldShowOnboarding: $viewModel.shouldShowOnboarding)
+                OnboardingView(shouldShowOnboarding: $viewModel.shouldShowOnboarding, navigationRouter: navigationRouter)
             } else {
                 ZStack {
                     ScrollView {
