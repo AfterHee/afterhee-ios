@@ -11,15 +11,28 @@ struct MainView: View {
     @StateObject private var viewModel = MainViewModel()
     
     var body: some View {
-        ScrollView {
-            VStack(spacing: 56) {
-                VStack(alignment: .leading, spacing: 16) {
-                    SchoolHeaderView(viewModel: viewModel)
-                    MealSectionView(viewModel: viewModel)
+        ZStack {
+            ScrollView {
+                VStack(spacing: 56) {
+                    VStack(alignment: .leading, spacing: 16) {
+                        SchoolHeaderView(viewModel: viewModel)
+                        MealSectionView(viewModel: viewModel)
+                    }
+                    CategorySelectSectionView(viewModel: viewModel)
+                    
                 }
-                CategorySelectSectionView(viewModel: viewModel)
+                .safeAreaPadding(.horizontal, 16)
+                Spacer().frame(height: 120)
             }
-            .safeAreaPadding(.horizontal, 16)
+            VStack {
+                Spacer()
+                
+                PrimaryButton(type: .getSuggestion, disabled: viewModel.selectedCategory == nil) {
+                    viewModel.getRecommendationButtonTapped()
+                }
+                .primaryButtonDefaultFrame()
+                .safeAreaPadding(.horizontal, 16)
+            }
         }
     }
 }
