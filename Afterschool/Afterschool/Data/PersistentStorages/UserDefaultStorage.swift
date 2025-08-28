@@ -87,9 +87,11 @@ final class UserDefaultsStorage: UserDefaultsStorageProtocol {
     }
 }
 
-enum UserDefaultStorageError: LocalizedError {
+enum UserDefaultStorageError: Error {
     case encodingFailed
-    
+}
+
+extension UserDefaultStorageError: LocalizedError {
     var errorDescription: String? {
         switch self {
         case .encodingFailed:
