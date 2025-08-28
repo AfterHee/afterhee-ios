@@ -9,9 +9,9 @@ import Foundation
 import os.log
 
 protocol UserDefaultsStorageProtocol {
-    func save<T: Codable>(_ value: T, forKey key: UserDefaultStorageKey) throws
-    func load<T: Codable>(_ type: T.Type, forKey key: UserDefaultStorageKey) -> T?
-    func remove(forKey key: UserDefaultStorageKey)
+    func save<T: Codable>(_ value: T, forKey key: String) throws
+    func load<T: Codable>(_ type: T.Type, forKey key: String) -> T?
+    func remove(forKey key: String)
 }
 
 final class UserDefaultsStorage: UserDefaultsStorageProtocol {
@@ -29,72 +29,61 @@ final class UserDefaultsStorage: UserDefaultsStorageProtocol {
         // 전략이 필요하면 설정: encoder.dateEncodingStrategy = .iso8601 등
     }
     
-    func save<T>(_ value: T, forKey key: UserDefaultStorageKey) throws where T: Codable {
+    func save<T>(_ value: T, forKey key: String) throws where T: Codable {
         switch value {
         case let v as String:
-            userDefaults.set(v, forKey: key.stringKey)
+            userDefaults.set(v, forKey: key)
         case let v as Int:
-            userDefaults.set(v, forKey: key.stringKey)
+            userDefaults.set(v, forKey: key)
         case let v as Bool:
-            userDefaults.set(v, forKey: key.stringKey)
+            userDefaults.set(v, forKey: key)
         case let v as Double:
-            userDefaults.set(v, forKey: key.stringKey)
+            userDefaults.set(v, forKey: key)
         case let v as Float:
-            userDefaults.set(v, forKey: key.stringKey)
+            userDefaults.set(v, forKey: key)
         case let v as Data:
-            userDefaults.set(v, forKey: key.stringKey)
+            userDefaults.set(v, forKey: key)
         case let v as Date:
-            userDefaults.set(v, forKey: key.stringKey)
+            userDefaults.set(v, forKey: key)
         case let v as URL:
-            userDefaults.set(v, forKey: key.stringKey)
+            userDefaults.set(v, forKey: key)
         default:
             // 나머지는 JSON으로 인코딩해서 Data로 저장
             do {
                 let data = try encoder.encode(value)
-                userDefaults.set(data, forKey: key.stringKey)
+                userDefaults.set(data, forKey: key)
             } catch {
-                logger.error("UserDefaultsStorage.encode failed for key '\(key.stringKey)': \(error)")
+                logger.error("UserDefaultsStorage.encode failed for key '\(key)': \(error)")
                 throw UserDefaultStorageError.encodingFailed
             }
         }
     }
     
-    func load<T>(_ type: T.Type, forKey key: UserDefaultStorageKey) -> T? where T: Codable {
-        if T.self == String.self { return userDefaults.string(forKey: key.stringKey) as? T }
-        if T.self == Int.self    { return (userDefaults.object(forKey: key.stringKey) as? Int) as? T }
-        if T.self == Bool.self   { return (userDefaults.object(forKey: key.stringKey) as? Bool) as? T }
-        if T.self == Double.self { return (userDefaults.object(forKey: key.stringKey) as? Double) as? T }
-        if T.self == Float.self  { return (userDefaults.object(forKey: key.stringKey) as? Float) as? T }
-        if T.self == Data.self   { return userDefaults.data(forKey: key.stringKey) as? T }
-        if T.self == Date.self   { return (userDefaults.object(forKey: key.stringKey) as? Date) as? T }
-        if T.self == URL.self    { return userDefaults.url(forKey: key.stringKey) as? T }
+    func load<T>(_ type: T.Type, forKey key: String) -> T? where T: Codable {
+        if T.self == String.self { return userDefaults.string(forKey: key) as? T }
+        if T.self == Int.self    { return (userDefaults.object(forKey: key) as? Int) as? T }
+        if T.self == Bool.self   { return (userDefaults.object(forKey: key) as? Bool) as? T }
+        if T.self == Double.self { return (userDefaults.object(forKey: key) as? Double) as? T }
+        if T.self == Float.self  { return (userDefaults.object(forKey: key) as? Float) as? T }
+        if T.self == Data.self   { return userDefaults.data(forKey: key) as? T }
+        if T.self == Date.self   { return (userDefaults.object(forKey: key) as? Date) as? T }
+        if T.self == URL.self    { return userDefaults.url(forKey: key) as? T }
         
         // 다른 타입들은 JSON 디코딩 시도
-        guard let data = userDefaults.data(forKey: key.stringKey) else { return nil }
+        guard let data = userDefaults.data(forKey: key) else { return nil }
         
         do {
             let decodedValue = try decoder.decode(type, from: data)
             return decodedValue
         } catch {
             // 디코딩 실패
-            logger.error("UserDefaultsStorage.decode failed for key '\(key.stringKey)': \(error)")
+            logger.error("UserDefaultsStorage.decode failed for key '\(key)': \(error)")
             return nil
         }
     }
     
-    func remove(forKey key: UserDefaultStorageKey) {
-        userDefaults.removeObject(forKey: key.stringKey)
-    }
-}
-
-enum UserDefaultStorageKey {
-    case onboardingShown
-    
-    var stringKey: String {
-        switch self {
-        case .onboardingShown:
-            return "onboardingShown"
-        }
+    func remove(forKey key: String) {
+        userDefaults.removeObject(forKey: key)
     }
 }
 
