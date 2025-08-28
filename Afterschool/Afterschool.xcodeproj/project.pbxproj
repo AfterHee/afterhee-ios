@@ -48,7 +48,6 @@
 				Info.plist,
 				Presentation/Common/.gitkeep,
 				Presentation/DesignSystem/.gitkeep,
-				Presentation/Main/SubViews/.gitkeep,
 				Presentation/Result/SubViews/.gitkeep,
 				Presentation/School/Change/.gitkeep,
 				Presentation/School/Register/.gitkeep,
