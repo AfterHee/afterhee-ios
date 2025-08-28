@@ -8,7 +8,7 @@
 
 import Foundation
 
-class MainServerRepository {
+class MainServerRepository: MainServerRepositoryProtocol {
     let network: Network
     
     init(network: Network = Network()) {
