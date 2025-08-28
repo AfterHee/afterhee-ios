@@ -15,11 +15,14 @@ protocol UserDefaultsRepositoryProtocol {
 
 enum UserDefaultStorageKey {
     case onboardingShown
+    case selectedSchool
     
     var stringKey: String {
         switch self {
         case .onboardingShown:
             return "onboardingShown"
+        case .selectedSchool:
+        return "selectedSchool"
         }
     }
 }

@@ -10,48 +10,35 @@ import Foundation
 final class MainViewModel: ObservableObject {
     private var navigationRouter: NavigationRouter
     private let getOnboarindgShownUseCase: GetOnboardingShownUseCase
+    private let getMealUseCase: GetMealsUseCase
+    private let getSelectedSchool: GetSelectedSchoolUseCase
     
-    @Published var schoolName: String = "애플고등학교"
+    @Published var schoolName: String = "학교를 선택해 주세요"
     @Published var selectedCategory: MealCategory? = nil
     @Published var shouldShowOnboarding: Bool = false
-        
-    // TODO: 연결 필요
-    @Published var menus: [DailyMenu] = {
-        let cal = Calendar.current
-        let today = cal.startOfDay(for: Date())
-        return [
-            DailyMenu(
-                date: cal.date(byAdding: .day, value: -1, to: today)!,
-                items: [
-                    .init(name: "쌀밥"), .init(name: "된장찌개"), .init(name: "제육볶음")
-                ]
-            ),
-            DailyMenu(
-                date: today,
-                items: [
-                    .init(name: "흑미밥"),
-                    .init(name: "육개장"),
-                    .init(name: "김치전"),
-                    .init(name: "요구르트")
-                ]
-            ),
-            DailyMenu(
-                date: cal.date(byAdding: .day, value: 1, to: today)!,
-                items: [] // 급식 정보 없음 케이스
-            )
-        ]
-    }()
-    
+    @Published var isLoadingMenu: Bool = false
+    @Published var loadErrorMessage: String? = nil
+    @Published var menus: [DailyMenu] = []
     @Published var selectedMenuIndex: Int = 1
     
     let categories: [MealCategory] = MealCategory.allCases
     
     init(
+        getOnboarindgShownUseCase: GetOnboardingShownUseCase,
+        getMealUseCase: GetMealsUseCase,
+        getSelectedSchool: GetSelectedSchoolUseCase,
+
         navigationRouter: NavigationRouter,
-        getOnboarindgShownUseCase: GetOnboardingShownUseCase
     ) {
         self.navigationRouter = navigationRouter
         self.getOnboarindgShownUseCase = getOnboarindgShownUseCase
+        self.getMealUseCase = getMealUseCase
+        self.getSelectedSchool = getSelectedSchool
+        
+        guard let selectedSchool = getSelectedSchool.execute() else {
+            fatalError("Selected school must exist before MainViewModel initialization.")
+        }
+        self.schoolName = selectedSchool.name
     }
     
     func selectCategory(_ category: MealCategory) {
@@ -69,5 +56,25 @@ final class MainViewModel: ObservableObject {
     
     func mainViewAppeared() {
         shouldShowOnboarding = !getOnboarindgShownUseCase.execute()
+        Task { await refreshMenus() }
+    }
+    
+    func refreshMenus(today: Date = Date()) async {
+        isLoadingMenu = true; loadErrorMessage = nil
+        defer { isLoadingMenu = false }
+        
+        do {
+            let lunchDTOs = try await getMealUseCase.execute(today: today)
+            let mapped = DailyMenuMapper.map(lunchDTOs)
+            menus = mapped.ensuringPlaceholders(for: today, calendar: .seoul)
+            if let idx = mapped.firstIndex(where: { Calendar.seoul.isDateInToday($0.date) }) {
+                selectedMenuIndex = idx
+            } else {
+                selectedMenuIndex = min(1, max(0, mapped.count - 1))
+            }
+        } catch {
+            loadErrorMessage = (error as NSError).localizedDescription
+            menus = []
+        }
     }
 }

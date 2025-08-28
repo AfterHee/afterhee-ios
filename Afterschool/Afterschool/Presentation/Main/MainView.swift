@@ -32,6 +32,7 @@ struct MainView: View {
                         .safeAreaPadding(.horizontal, 16)
                         Spacer().frame(height: 120)
                     }
+                    .scrollIndicators(.hidden)
                     VStack {
                         Spacer()
                         

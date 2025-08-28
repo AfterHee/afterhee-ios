@@ -25,12 +25,12 @@ struct MenuCarouselView: View {
                         infoHeight: uniformHeight,
                         minRows: minRows
                     )
-                    .frame(width: cardWidth, height: uniformHeight + 32)
+                    .frame(width: cardWidth, height: uniformHeight + 66)
                     .tag(index)
                 }
             }
             .tabViewStyle(.page(indexDisplayMode: .never))
-            .frame(height: uniformHeight + 65)
+            .frame(height: uniformHeight + 70)
             
             HStack(spacing: 16) {
                 if selectedIndex > 0 {
@@ -78,7 +78,7 @@ struct MenuCarouselView: View {
 
     private func cardHeight(for count: Int) -> CGFloat {
         let rows = max(count, minRows)
-        let listHeight = CGFloat(rows) * 17 + CGFloat(max(rows - 1, 0)) * 6
+        let listHeight = CGFloat(rows) * 25
         return listHeight
     }
     
