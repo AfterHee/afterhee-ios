@@ -19,7 +19,7 @@ struct RegistrationModal: View {
     var body: some View {
         ZStack {
             // 배경 오버레이 (흐릿한 배경)
-            Color.afBlack.opacity(0.5)
+            Color.afBlack.opacity(0.2)
                 .ignoresSafeArea()
                 .onTapGesture {
                     onDismiss()
