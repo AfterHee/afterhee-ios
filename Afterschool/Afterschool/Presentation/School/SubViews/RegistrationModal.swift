@@ -97,7 +97,11 @@ struct RegistrationModal: View {
             school: School(
                 id: "1",
                 name: "애플중학교",
-                address: "경상북도 포항시"
+                address: "경상북도 포항시",
+                detailAddress: "애플로 123",
+                adminCode: "G10",
+                sidoCode: "47",
+                sidoName: "경상북도"
             ),
             onRegister: {
                 print("변경하기 버튼 눌림!")
@@ -112,7 +116,11 @@ struct RegistrationModal: View {
 //            school: School(
 //                id: "2",
 //                name: "애플디자인고등학교",
-//                address: "경상북도 포항시"
+//                address: "경상북도 포항시",
+//                detailAddress: "애플로 456",
+//                adminCode: "G10",
+//                sidoCode: "47",
+//                sidoName: "경상북도"
 //            ),
 //            onRegister: {
 //                print("변경하기 버튼 눌림!")
@@ -127,7 +135,11 @@ struct RegistrationModal: View {
 //            school: School(
 //                id: "3",
 //                name: "애플중학교",
-//                address: "서울특별시 강남구 테헤란로 123길 45, 6층"
+//                address: "서울특별시 강남구 테헤란로 123길 45, 6층",
+//                detailAddress: "테헤란로 123길 45, 6층",
+//                adminCode: "G10",
+//                sidoCode: "11",
+//                sidoName: "서울특별시"
 //            ),
 //            onRegister: {
 //                print("변경하기 버튼 눌림!")
@@ -142,7 +154,11 @@ struct RegistrationModal: View {
 //            school: School(
 //                id: "4",
 //                name: "애플디자인고등학교",
-//                address: "서울특별시 강남구 테헤란로 123길 45, 6층"
+//                address: "서울특별시 강남구 테헤란로 123길 45, 6층",
+//                detailAddress: "테헤란로 123길 45, 6층",
+//                adminCode: "G10",
+//                sidoCode: "11",
+//                sidoName: "서울특별시"
 //            ),
 //            onRegister: {
 //                print("변경하기 버튼 눌림!")

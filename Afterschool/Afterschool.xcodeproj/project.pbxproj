@@ -38,13 +38,8 @@
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
 				Info.plist,
-				Presentation/Common/.gitkeep,
-				Presentation/DesignSystem/.gitkeep,
-				Presentation/Result/SubViews/.gitkeep,
-				Presentation/School/Change/.gitkeep,
 				Presentation/School/Register/.gitkeep,
 				Presentation/School/SubViews/.gitkeep,
-				Resource/Fonts/.gitkeep,
 			);
 			target = EE29B1082E540DE2009CF9D0 /* Afterschool */;
 		};
@@ -430,7 +425,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = UKZF3A6P2B;
+				DEVELOPMENT_TEAM = 869PVPUUQY;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = Afterschool/Info.plist;
@@ -458,7 +453,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = UKZF3A6P2B;
+				DEVELOPMENT_TEAM = 869PVPUUQY;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = Afterschool/Info.plist;
