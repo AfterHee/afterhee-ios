@@ -10,6 +10,7 @@ import Foundation
 final class MainViewModel: ObservableObject {
     @Published var schoolName: String = "애플고등학교"
     @Published var selectedCategory: MealCategory? = nil
+    @Published var shouldShowOnboarding: Bool = false
         
     // TODO: 연결 필요
     @Published var menus: [DailyMenu] = {
