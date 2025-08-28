@@ -7,30 +7,79 @@
 
 import SwiftUI
 
+private extension DailyMenu {
+    var dateFormatted: String {
+        let f = DateFormatter()
+        f.locale = .init(identifier: "ko_KR")
+        f.dateFormat = "M월 d일(E)"
+        return f.string(from: date)
+    }
+}
+
 struct MenuCarouselCardView: View {
+    let menu: DailyMenu
+    let relativeLabel: String
+    let infoHeight: CGFloat
+    let minRows: Int
+    
     var body: some View {
         ZStack {
             RoundedRectangle(cornerRadius: 12)
                 .fill(Color.afGray50)
             VStack(spacing: 16) {
-                HStack {
-                    Text("8월 18일 (월)") // TODO: 실제 데이터로 대체, DateFormatter 필요
-                        .font(.afMedium14)
-                        .lineHeight(1.2, fontSize: 14)
-                        .foregroundStyle(Color.afGray900)
-                    Text("오늘") // TODO: 실제 데이터로 대체 - 어제, 오늘, 내일 판별 필요
+                if menu.items.isEmpty {
+                    ZStack {
+                        VStack {
+                            HStack(spacing: 6) {
+                                Text(menu.dateFormatted)
+                                    .font(.afMedium14)
+                                    .lineHeight(1.2, fontSize: 14)
+                                    .foregroundStyle(Color.afGray900)
+                                Text(relativeLabel)
+                                    .font(.afBold14)
+                                    .lineHeight(1.2, fontSize: 14)
+                                    .foregroundStyle(relativeLabel=="오늘" ? Color.afPrimary : Color.afGray600)
+                            }
+                            Spacer()
+                        }
+                        VStack {
+                            Spacer()
+                            Text("급식 정보가 없어요")
+                                .font(.afMedium14)
+                                .lineHeight(1.2, fontSize: 14)
+                                .foregroundStyle(Color.afGray200)
+                                .frame(maxWidth: .infinity)
+                                .frame(height: infoHeight)
+                            Spacer()
+                        }
+                    }
+                } else {
+                    HStack(spacing: 6) {
+                        Text(menu.dateFormatted)
+                            .font(.afMedium14)
+                            .lineHeight(1.2, fontSize: 14)
+                            .foregroundStyle(Color.afGray900)
+                        Text(relativeLabel)
+                            .font(.afBold14)
+                            .lineHeight(1.2, fontSize: 14)
+                            .foregroundStyle(relativeLabel=="오늘" ? Color.afPrimary : Color.afGray600)
+                    }
+                    VStack(alignment: .center, spacing: 6) {
+                        ForEach(menu.items) { item in
+                            Text(item.name)
+                                .lineLimit(1)
+                                .font(.afRegular14)
+                                .lineHeight(1.2, fontSize: 14)
+                                .foregroundStyle(Color.afGray900)
+                        }
+                        Spacer()
+                    }
+                    .frame(maxWidth: .infinity)
+                    .frame(height: infoHeight)
                 }
-                Spacer()
             }
             .padding(.vertical, 16)
-            Text("급식 정보가 없어요")
-                .font(.afMedium14)
-                .lineHeight(1.2, fontSize: 14)
-                .foregroundStyle(Color.afGray200)
         }
+        .contentShape(RoundedRectangle(cornerRadius: 12))
     }
-}
-
-#Preview {
-    MenuCarouselCardView()
 }
