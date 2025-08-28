@@ -13,6 +13,35 @@ final class MainViewModel: ObservableObject {
     
     @Published var schoolChangeButtonTapped = false
     
+    // TODO: 연결 필요
+    @Published var menus: [DailyMenu] = {
+        let cal = Calendar.current
+        let today = cal.startOfDay(for: Date())
+        return [
+            DailyMenu(
+                date: cal.date(byAdding: .day, value: -1, to: today)!,
+                items: [
+                    .init(name: "쌀밥"), .init(name: "된장찌개"), .init(name: "제육볶음")
+                ]
+            ),
+            DailyMenu(
+                date: today,
+                items: [
+                    .init(name: "흑미밥"),
+                    .init(name: "육개장"),
+                    .init(name: "김치전"),
+                    .init(name: "요구르트")
+                ]
+            ),
+            DailyMenu(
+                date: cal.date(byAdding: .day, value: 1, to: today)!,
+                items: [] // 급식 정보 없음 케이스
+            )
+        ]
+    }()
+    
+    @Published var selectedMenuIndex: Int = 1
+    
     let categories: [MealCategory] = MealCategory.allCases
     
     func selectCategory(_ category: MealCategory) {
