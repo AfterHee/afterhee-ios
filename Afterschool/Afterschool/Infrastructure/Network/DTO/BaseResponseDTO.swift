@@ -12,3 +12,10 @@ struct BaseResponseDTO<T: Codable>: Codable {
     let isError: Bool
     let message: String
 }
+
+protocol HasCommonFields {
+    var isError: Bool { get }
+    var message: String { get }
+}
+
+extension BaseResponseDTO: HasCommonFields {}
