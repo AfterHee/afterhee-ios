@@ -12,24 +12,12 @@ import Combine
 /// Afterschool 디자인 시스템에 맞춰 구현
 struct SchoolSearchView: View {
     // MARK: - Properties
-    @StateObject private var viewModel = SchoolSearchViewModel()
+    @StateObject private var viewModel = SchoolSearchViewModel(searchSchoolUseCase: SearchSchoolUseCase(networkService: NetworkService()))
 
     // MARK: - Body
     var body: some View {
         NavigationStack {
             VStack(spacing: 0) {
-                // 검색바
-                SearchBar(
-                    text: $viewModel.searchText,
-                    placeholder: "학교 검색"
-                ) {
-                    viewModel.searchSchools(query: viewModel.searchText)
-                } onBack: {
-                    // 뒤로가기 처리
-                    print("Back tapped")
-                }
-                .padding(.top, 10)
-                
                 // 검색바 아래 구분선
                 Rectangle()
                     .fill(Color.afGray100)
@@ -126,12 +114,17 @@ class SchoolSearchViewModel: ObservableObject {
     @Published var showRegistrationModal = false
     @Published var isRegistering = false
     
+//    let searchSchoolUsecase: SearchSchoolUsecase
+    let searchSchoolUseCase: SearchSchoolUseCase
+    
     // 현재 선택된 학교 (메인 뷰에서 전달받을 예정)
     @Published var currentSelectedSchool: School?
     
     private var cancellables = Set<AnyCancellable>()
     
-    init() {
+    init(searchSchoolUseCase: SearchSchoolUseCase) {
+        self.searchSchoolUseCase = searchSchoolUseCase
+        
         setupSearchDebounce()
         // 임시로 현재 선택된 학교 설정 (실제로는 메인 뷰에서 전달받음)
         currentSelectedSchool = School.mockSchools.first
@@ -155,14 +148,20 @@ class SchoolSearchViewModel: ObservableObject {
         
         isLoading = true
         
-        // 네트워크 지연 시뮬레이션
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) { [weak self] in
-            let filteredSchools = School.mockSchools.filter { school in
-                school.name.localizedCaseInsensitiveContains(query) ||
-                school.address.localizedCaseInsensitiveContains(query)
+        Task {
+            do {
+                let searchResults = try await searchSchoolUseCase.execute(keyword: query)
+                await MainActor.run {
+                    self.schools = searchResults
+                    self.isLoading = false
+                }
+            } catch {
+                await MainActor.run {
+                    self.schools = []
+                    self.isLoading = false
+                }
+                print("Search error: \(error)")
             }
-            self?.schools = filteredSchools
-            self?.isLoading = false
         }
     }
     

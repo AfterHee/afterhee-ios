@@ -37,14 +37,12 @@ struct RegistrationModal: View {
                                 .font(.system(size: 20, weight: .medium))
                                 .foregroundColor(.afBlack)
                         }
+                        .padding(.trailing, -16)
                     }
                     
-                    // 학교 아이콘 (주황색/갈색 톤)
-//                    Image(systemName: "building.2")
-//                        .font(.system(size: 48))
-//                        .foregroundColor(Color(red: 0.8, green: 0.4, blue: 0.2)) // 주황색/갈색 톤
                     Image(.schoolIcon)
                         .padding(.bottom, 20)
+                        
                 }
                 .padding(.horizontal, 24)
                 .padding(.top, 24)
@@ -53,7 +51,7 @@ struct RegistrationModal: View {
                 VStack(spacing: 20) {
                     // 질문 텍스트
                     Text("이 학교로 변경하시겠습니까?")
-                        .font(.afBold16)
+                        .font(.afSemiBold18)
                         .foregroundColor(.afBlack)
                         .multilineTextAlignment(.center)
                         .lineLimit(2)
@@ -82,6 +80,7 @@ struct RegistrationModal: View {
                     Divider()
                         .background(Color.afGray100)
                         .padding(.top, 24)
+                        .padding(.bottom, 20)
                     
                     // 변경하기 버튼
                     Button(action: onRegister) {
@@ -89,7 +88,7 @@ struct RegistrationModal: View {
                             .font(.afMedium16)
                             .foregroundColor(.afBlack)
                             .frame(maxWidth: .infinity)
-                            .padding(.vertical, 16)
+                            .padding(.bottom, 30)
                             .background(Color.afWhite)
                             .cornerRadius(0)
                     }
@@ -97,8 +96,9 @@ struct RegistrationModal: View {
                 }
             }
             .background(Color.afWhite)
-            .cornerRadius(20)
-            .padding(.horizontal, 20)
+            .frame(width: 321, height: 321)
+            .cornerRadius(12)
+//            .padding(.horizontal, 20)
         }
     }
 }
@@ -122,48 +122,48 @@ struct RegistrationModal: View {
         )
         
         // 긴 학교명, 짧은 주소 예시
-        RegistrationModal(
-            school: School(
-                id: "2",
-                name: "애플디자인고등학교",
-                address: "경상북도 포항시"
-            ),
-            onRegister: {
-                print("변경하기 버튼 눌림!")
-            },
-            onDismiss: {
-                print("X 버튼 눌림!")
-            }
-        )
+//        RegistrationModal(
+//            school: School(
+//                id: "2",
+//                name: "애플디자인고등학교",
+//                address: "경상북도 포항시"
+//            ),
+//            onRegister: {
+//                print("변경하기 버튼 눌림!")
+//            },
+//            onDismiss: {
+//                print("X 버튼 눌림!")
+//            }
+//        )
         
         // 짧은 학교명, 긴 주소 예시
-        RegistrationModal(
-            school: School(
-                id: "3",
-                name: "애플중학교",
-                address: "서울특별시 강남구 테헤란로 123길 45, 6층"
-            ),
-            onRegister: {
-                print("변경하기 버튼 눌림!")
-            },
-            onDismiss: {
-                print("X 버튼 눌림!")
-            }
-        )
+//        RegistrationModal(
+//            school: School(
+//                id: "3",
+//                name: "애플중학교",
+//                address: "서울특별시 강남구 테헤란로 123길 45, 6층"
+//            ),
+//            onRegister: {
+//                print("변경하기 버튼 눌림!")
+//            },
+//            onDismiss: {
+//                print("X 버튼 눌림!")
+//            }
+//        )
         
         // 긴 학교명, 긴 주소 예시
-        RegistrationModal(
-            school: School(
-                id: "4",
-                name: "애플디자인고등학교",
-                address: "서울특별시 강남구 테헤란로 123길 45, 6층"
-            ),
-            onRegister: {
-                print("변경하기 버튼 눌림!")
-            },
-            onDismiss: {
-                print("X 버튼 눌림!")
-            }
-        )
+//        RegistrationModal(
+//            school: School(
+//                id: "4",
+//                name: "애플디자인고등학교",
+//                address: "서울특별시 강남구 테헤란로 123길 45, 6층"
+//            ),
+//            onRegister: {
+//                print("변경하기 버튼 눌림!")
+//            },
+//            onDismiss: {
+//                print("X 버튼 눌림!")
+//            }
+//        )
     }
 }
