@@ -9,7 +9,7 @@ import SwiftUI
 
 /// 학교 등록 확인 모달 컴포넌트
 /// 이미지 디자인에 맞춰 정확히 구현
-struct RegistrationModal: View {
+struct RegistrationChangeModal: View {
     // MARK: - Properties
     let school: School
     let onRegister: () -> Void
@@ -43,7 +43,7 @@ struct RegistrationModal: View {
                 Spacer().frame(height: 20)
                 
                 // TODO: 등록/변경 분기 필요
-                Text("이 학교로 등록하시겠습니까?")
+                Text("이 학교로 변경하시겠습니까?")
                     .font(.afSemiBold18)
                     .lineHeight(1.5, fontSize: 18)
                     .foregroundColor(.afBlack)
@@ -74,7 +74,7 @@ struct RegistrationModal: View {
                 Button(action: onRegister) {
                     VStack {
                         Spacer().frame(height: 20)
-                        Text("등록하기")
+                        Text("변경하기")
                             .font(.afMedium16)
                             .foregroundColor(.afGray600)
                         Spacer().frame(height: 20)

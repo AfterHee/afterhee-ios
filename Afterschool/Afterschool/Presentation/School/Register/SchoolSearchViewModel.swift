@@ -145,12 +145,4 @@ class SchoolSearchViewModel: ObservableObject {
     func isSchoolCurrentlySelected(_ school: School) -> Bool {
         return school.id == currentSelectedSchool?.id
     }
-    
-    // TODO: - Additional Features
-    // - 검색 히스토리 저장/불러오기
-    // - 즐겨찾기 기능
-    // - 최근 검색어 표시
-    // - 등록 상태 저장/복원
-    // - 등록 완료 알림
-    // - 등록 취소 기능
 }
