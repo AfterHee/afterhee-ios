@@ -26,28 +26,10 @@ final class MainViewModel: ObservableObject {
         getOnboarindgShownUseCase: GetOnboardingShownUseCase,
         getMealUseCase: GetMealsUseCase,
         getSelectedSchool: GetSelectedSchoolUseCase,
-        
-        // TODO: 임시로 배정(추후 확인 후 삭제 필요)
-        userDefaultsRepo: UserDefaultsRepositoryProtocol
     ) {
         self.getOnboarindgShownUseCase = getOnboarindgShownUseCase
         self.getMealUseCase = getMealUseCase
         self.getSelectedSchool = getSelectedSchool
-        
-        
-        // TODO: 임시로 배정(추후 확인 후 삭제 필요)
-        do {
-            let preselectedSchool = SchoolSelection(
-                name: "경북여자고등학교",
-                eduOfficeCode: "D10",
-                adminCode: "7240055"
-            )
-            let save = SetSelectedSchoolUseCase(userDefaultRepository: userDefaultsRepo)
-            try save.execute(school: preselectedSchool)
-        } catch {
-            print("학교 저장 실패: \(error)")
-        }
-        
         
         guard let selectedSchool = getSelectedSchool.execute() else {
             fatalError("Selected school must exist before MainViewModel initialization.")
