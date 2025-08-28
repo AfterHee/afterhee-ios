@@ -7,12 +7,6 @@
 
 import SwiftUI
 
-private extension Array {
-    subscript(safe index: Index) -> Element? {
-        indices.contains(index) ? self[index] : nil
-    }
-}
-
 struct MenuCarouselView: View {
     let menus: [DailyMenu]                   // [어제, 오늘, 내일] (최대 3개 가정)
     @Binding var selectedIndex: Int          // 0: 어제, 1: 오늘, 2: 내일
