@@ -69,6 +69,7 @@ struct MenuCarouselView: View {
                     Spacer().frame(width: 18)
                 }
             }
+            .safeAreaPadding(.horizontal, 16)
         }
     }
     

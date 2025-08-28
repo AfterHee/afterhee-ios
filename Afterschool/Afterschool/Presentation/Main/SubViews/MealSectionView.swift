@@ -33,6 +33,7 @@ struct MealSectionView: View {
                 menus: viewModel.menus,
                 selectedIndex: $viewModel.selectedMenuIndex
             )
+            .ignoresSafeArea(.all, edges: .horizontal)
         }
     }
 }
