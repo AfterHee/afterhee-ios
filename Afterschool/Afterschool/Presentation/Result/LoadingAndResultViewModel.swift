@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import SwiftUI
 
 protocol LoadingAndResultViewModelProtocol {
     var recommendationMenuName: String? { get set }
@@ -13,6 +14,9 @@ protocol LoadingAndResultViewModelProtocol {
     var retryCount: Int { get }
     var isLoading: Bool { get }
     var backgroundEffectOpacity: CGFloat { get }
+    var tryCount: Int { get }
+    var retryButtonLabel: LocalizedStringKey { get }
+    var retryButtonActivated: Bool { get }
     
     func loadingAnimationFinihed()
     func animateAfterLoadingAnimationFinihed()
@@ -27,6 +31,17 @@ class LoadingAndResultViewModel: LoadingAndResultViewModelProtocol {
     private(set) var retryCount = 0
     private(set) var isLoading = true
     private(set) var backgroundEffectOpacity: CGFloat = 0
+    private(set) var tryCount = 0
+    
+    var retryButtonLabel: LocalizedStringKey {
+        retryCount >= 5
+            ? "더 이상 다시 뽑을 수 없어요"
+            : "다시 뽑기 (\(retryCount)/5)"
+    }
+    
+    var retryButtonActivated: Bool {
+        !isLoading && retryCount < 5
+    }
     
     /// 로딩 애니메이션이 끝난 뒤 상태 변경
     func loadingAnimationFinihed() {
@@ -48,6 +63,7 @@ class LoadingAndResultViewModel: LoadingAndResultViewModelProtocol {
         backgroundEffectOpacity = 0
         
         DispatchQueue.main.asyncAfter(deadline: .now() + 3.0) { [weak self] in
+            self?.tryCount += 1
             self?.recommendationMenuName = "뿌링클"
         }
     }
@@ -56,6 +72,7 @@ class LoadingAndResultViewModel: LoadingAndResultViewModelProtocol {
     func viewAppeared() {
         // TODO: 디버그 용 결과 표출 로직. 유즈케이스 구현 후 제거.
         DispatchQueue.main.asyncAfter(deadline: .now() + 3.0) { [weak self] in
+            self?.tryCount += 1
             self?.recommendationMenuName = "뿌링클"
         }
     }

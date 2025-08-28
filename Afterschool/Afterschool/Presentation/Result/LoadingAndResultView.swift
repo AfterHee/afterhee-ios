@@ -52,11 +52,17 @@ struct LoadingAndResultView: View {
                 Spacer()
                 
                 if viewModel.retryCount > 0 {
-                    PrimaryButton(type: .retry, disabled: viewModel.isLoading) {
-                        viewModel.retryButtonTapped()
+                    VStack(spacing: 16) {
+                        if viewModel.retryButtonActivated {
+                            RetryGuideLabel()
+                        }
+                        
+                        PrimaryButton(viewModel.retryButtonLabel, disabled: !viewModel.retryButtonActivated) {
+                            viewModel.retryButtonTapped()
+                        }
+                        .primaryButtonDefaultFrame()
+                        .padding(.horizontal, 16)
                     }
-                    .primaryButtonDefaultFrame()
-                    .padding(.horizontal, 16)
                 }
             }
         }
