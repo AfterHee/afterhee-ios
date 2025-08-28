@@ -5,8 +5,6 @@
 //  Created by BoMin Lee on 8/25/25.
 //
 
-import SwiftUI
-
 public enum MealCategory: String, CaseIterable, Identifiable, Hashable {
     case korean
     case chinese
