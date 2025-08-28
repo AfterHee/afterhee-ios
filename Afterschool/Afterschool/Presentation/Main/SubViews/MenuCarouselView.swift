@@ -22,7 +22,6 @@ struct MenuCarouselView: View {
     private let outerPadding: CGFloat = 12
     
     var body: some View {
-        let uniformHeight = computedUniformHeight()
         ZStack {
             TabView(selection: $selectedIndex) {
                 ForEach(Array(menus.enumerated()), id: \.offset) { index, menu in
@@ -77,8 +76,7 @@ struct MenuCarouselView: View {
         UIScreen.main.bounds.width - 100
     }
     
-    // 세 카드 중 최댓값으로 높이 통일 (최소 3행 기준 유지)
-    private func computedUniformHeight() -> CGFloat {
+    private var uniformHeight: CGFloat {
         let heights = menus.map { cardHeight(for: $0.items.count) }
         return heights.max() ?? cardHeight(for: minRows)
     }
