@@ -7,15 +7,6 @@
 
 import Foundation
 
-protocol MainViewModelProtocol {
-    var schoolName: String { get }
-    var selectedCategory: MealCategory? { get }
-    var shouldShowOnboarding: Bool { get }
-    var menus: [DailyMenu] { get }
-    var selectedMenuIndex: Int { get }
-    var categories: [MealCategory] { get }
-}
-
 final class MainViewModel: ObservableObject {
     private let getOnboarindgShownUseCase: GetOnboardingShownUseCase
     
