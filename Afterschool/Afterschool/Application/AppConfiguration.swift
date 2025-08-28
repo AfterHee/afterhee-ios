@@ -7,10 +7,6 @@
 
 import Foundation
 
-enum AppConfigurationError: Error {
-    case missingOrInvalidBaseURL
-}
-
 struct AppConfiguration {
     static var baseURL: URL {
         guard let s = Bundle.main.object(forInfoDictionaryKey: "BASE_URL") as? String,
