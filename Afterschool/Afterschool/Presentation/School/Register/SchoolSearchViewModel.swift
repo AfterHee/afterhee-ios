@@ -7,10 +7,10 @@
 
 import Foundation
 import Combine
+import os.log
 
 // MARK: - SchoolSearchViewModel
 /// 학교 검색 기능을 담당하는 ViewModel
-@MainActor
 class SchoolSearchViewModel: ObservableObject {
     // MARK: - Published Properties
     @Published var searchText = ""
@@ -24,6 +24,7 @@ class SchoolSearchViewModel: ObservableObject {
     
     // MARK: - Dependencies
     let getSchoolUseCase: GetSchoolUseCase
+    let setSelectedSchoolUseCase: SetSelectedSchoolUseCase
     
     // MARK: - State
     /// 현재 선택된 학교 (메인 뷰에서 전달받을 예정)
@@ -33,10 +34,18 @@ class SchoolSearchViewModel: ObservableObject {
     private var cancellables = Set<AnyCancellable>()
     private let searchDebounceTime: TimeInterval = 0.5  // 디바운스 시간 증가로 API 호출 최적화
     private var currentSearchTask: Task<Void, Never>?  // 중복 요청 방지
+    private let navigationRouter: NavigationRouter
+    private let logger = Logger.makeOf("SchoolSearchViewModel")
     
     // MARK: - Initialization
-    init(getSchoolUseCase: GetSchoolUseCase) {
+    init(
+        navigationRouter: NavigationRouter,
+        getSchoolUseCase: GetSchoolUseCase,
+        setSelectedSchoolUseCase: SetSelectedSchoolUseCase
+    ) {
+        self.navigationRouter = navigationRouter
         self.getSchoolUseCase = getSchoolUseCase
+        self.setSelectedSchoolUseCase = setSelectedSchoolUseCase
         setupSearchDebounce()
         // currentSelectedSchool은 nil로 초기화 (실제 선택된 학교가 없음)
         currentSelectedSchool = nil
@@ -136,20 +145,12 @@ class SchoolSearchViewModel: ObservableObject {
     func registerSchool() {
         guard let school = selectedSchool else { return }
         
-        isRegistering = true
-        
-        // TODO: - Actual Registration API Call
-        // 실제 등록 API 호출로 변경
-        // - API 엔드포인트 구현
-        // - 성공/실패 처리
-        // - 에러 핸들링
-        
-        DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) { [weak self] in
-            self?.isRegistering = false
-            self?.showRegistrationModal = false
-            self?.selectedSchool = nil
-            self?.currentSelectedSchool = school
-            print("Successfully registered: \(school.name)")
+        do {
+            try setSelectedSchoolUseCase.execute(school: school)
+            isRegistering = true
+            
+        } catch {
+            logger.error("❌ failed to set selected school to UserDefaults")
         }
     }
     

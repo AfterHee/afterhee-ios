@@ -9,22 +9,24 @@ import SwiftUI
 
 /// 학교 등록 기능 뷰 (검색바가 NavigationBar와 함께 있는 구조)
 struct SchoolRegisterView: View {
-    @StateObject private var viewModel = SchoolSearchViewModel(getSchoolUseCase: GetSchoolUseCase())
+    @StateObject private var viewModel: SchoolSearchViewModel
+    
+    init(deps: SchoolSearchDepsProviding) {
+        self._viewModel = .init(wrappedValue: deps.getSchoolSearchViewModel())
+    }
     
     var body: some View {
-        NavigationStack {
-            VStack(spacing: 0) {
-                // 구분선
-                Rectangle()
-                    .fill(Color.afGray100)
-                    .frame(height: 8)
-                
-                // 검색 결과
-                searchResultsView
-            }
-            .background(Color.afWhite)
-            .afNavigationBar(centerView: searchBarInNavigationBar)
+        VStack(spacing: 0) {
+            // 구분선
+            Rectangle()
+                .fill(Color.afGray100)
+                .frame(height: 8)
+            
+            // 검색 결과
+            searchResultsView
         }
+        .background(Color.afWhite)
+        .afNavigationBar(centerView: searchBarInNavigationBar)
         .overlay(
             Group {
                 if viewModel.showRegistrationModal,
@@ -107,5 +109,5 @@ struct SchoolRegisterView: View {
 
 // MARK: - Preview
 #Preview("학교 등록") {
-    SchoolRegisterView()
+    SchoolRegisterView(deps: SchoolSearchDepsProvider(navigationRouter: NavigationRouter()))
 }

@@ -9,31 +9,33 @@ import SwiftUI
 
 /// 학교 변경 기능 뷰
 struct SchoolSearchChangeView: View {
-    @StateObject private var viewModel = SchoolSearchViewModel(getSchoolUseCase: GetSchoolUseCase())
+    @StateObject private var viewModel: SchoolSearchViewModel
+    
+    init(deps: SchoolSearchDepsProviding) {
+        self._viewModel = .init(wrappedValue: deps.getSchoolSearchViewModel())
+    }
     
     var body: some View {
-        NavigationStack {
-            VStack(spacing: 0) {
-                // 검색바
-                SearchBar(
-                    searchText: $viewModel.searchText,
-                    placeholder: "학교 검색"
-                )
-                .padding(.horizontal, 20)
-                .padding(.top, -5)
-                .padding(.bottom, 20)
-                
-                // 구분선
-                Rectangle()
-                    .fill(Color.afGray50)
-                    .frame(height: 8)
-                
-                // 검색 결과
-                searchResultsView
-            }
-            .background(Color.afWhite)
-            .afNavigationBar(title: "학교 변경하기")
+        VStack(spacing: 0) {
+            // 검색바
+            SearchBar(
+                searchText: $viewModel.searchText,
+                placeholder: "학교 검색"
+            )
+            .padding(.horizontal, 20)
+            .padding(.top, -5)
+            .padding(.bottom, 20)
+            
+            // 구분선
+            Rectangle()
+                .fill(Color.afGray50)
+                .frame(height: 8)
+            
+            // 검색 결과
+            searchResultsView
         }
+        .background(Color.afWhite)
+        .afNavigationBar(title: "학교 변경하기")
         .overlay(
             Group {
                 if viewModel.showRegistrationModal,
@@ -108,5 +110,7 @@ struct SchoolSearchChangeView: View {
 
 // MARK: - Preview
 #Preview {
-    SchoolSearchChangeView()
+    SchoolSearchChangeView(
+        deps: SchoolSearchDepsProvider(navigationRouter: NavigationRouter())
+    )
 }
