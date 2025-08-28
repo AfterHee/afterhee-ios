@@ -8,13 +8,13 @@
 import Foundation
 
 struct GetOnboardingShownUseCase {
-    let UserDefaultRepository: UserDefaultRepositoryProtocol
+    let userDefaultRepository: UserDefaultsRepositoryProtocol
     
-    init(UserDefaultRepository: UserDefaultRepositoryProtocol) {
-        self.UserDefaultRepository = UserDefaultRepository
+    init(userDefaultRepository: UserDefaultsRepositoryProtocol) {
+        self.userDefaultRepository = userDefaultRepository
     }
     
     func execute() -> Bool {
-        UserDefaultRepository.load(Bool.self, forKey: .onboardingShown) ?? false
+        userDefaultRepository.load(Bool.self, forKey: .onboardingShown) ?? false
     }
 }

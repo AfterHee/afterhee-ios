@@ -8,9 +8,9 @@
 import Foundation
 
 struct SetOnboardingShownUseCase {
-    let UserDefaultRepository: UserDefaultRepositoryProtocol
+    let UserDefaultRepository: UserDefaultsRepositoryProtocol
     
-    init(UserDefaultRepository: UserDefaultRepositoryProtocol) {
+    init(UserDefaultRepository: UserDefaultsRepositoryProtocol) {
         self.UserDefaultRepository = UserDefaultRepository
     }
     

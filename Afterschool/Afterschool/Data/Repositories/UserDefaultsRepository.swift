@@ -1,5 +1,5 @@
 //
-//  UserDefaultRepository.swift
+//  UserDefaultsRepository.swift
 //  Afterschool
 //
 //  Created by 임영택 on 8/28/25.
@@ -7,7 +7,7 @@
 
 import Foundation
 
-final class UserDefaultRepository: UserDefaultRepositoryProtocol {
+final class UserDefaultsRepository: UserDefaultsRepositoryProtocol {
     private let storage: UserDefaultsStorageProtocol
     
     init(storage: UserDefaultsStorageProtocol) {
