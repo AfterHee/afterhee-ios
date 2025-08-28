@@ -8,9 +8,14 @@
 import SwiftUI
 
 struct ErrorAlert: View {
-    // Constraints
+    // MARK: - Properties
+    let title: String
+    let buttonTitle: String
+    let action: () -> Void
+    
+    // MARK: - Constraints
     let outerRadius: CGFloat = 12
-    let alertSize: CGSize = .init(width: 321, height: 233)
+    let alertHeight: CGFloat = 233
     let emojiSize: CGFloat = 45
     let emojiTopPadding: CGFloat = 40
     let emojiBottomPadding: CGFloat = 24
@@ -18,7 +23,7 @@ struct ErrorAlert: View {
     var body: some View {
         RoundedRectangle(cornerRadius: outerRadius, style: .circular)
             .foregroundStyle(Color.afWhite)
-            .frame(width: alertSize.width, height: alertSize.height)
+            .frame(height: alertHeight)
             .overlay {
                 VStack(spacing: 0) {
                     Image(.alertEmoji)
@@ -27,7 +32,7 @@ struct ErrorAlert: View {
                         .padding(.top, emojiTopPadding)
                         .padding(.bottom, emojiBottomPadding)
                     
-                    ErrorTitle(title: "추천 메뉴를 불러오지 못했어요.")
+                    ErrorTitle(title: title)
                     
                     Spacer()
                     
@@ -36,19 +41,86 @@ struct ErrorAlert: View {
                             .foregroundStyle(Color.afGray100)
                             .frame(maxWidth: .infinity, maxHeight: 1)
                         
-                        ErrorAlertOKButton(title: "다시 시도하기") {
-                            //
-                        }
+                        ErrorAlertOKButton(title: buttonTitle, action: action)
                     }
                 }
             }
     }
 }
 
-#Preview {
-    ZStack {
-        Color.black
-        
-        ErrorAlert()
+struct ErrorAlertModifier: ViewModifier {
+    let title: String
+    let buttonTitle: String
+    let action: () -> Void
+    @Binding var isPresented: Bool
+    
+    func body(content: Content) -> some View {
+        if isPresented {
+            content
+                .overlay {
+                    VStack {
+                        Spacer()
+                        
+                        ErrorAlert(title: title, buttonTitle: buttonTitle) {
+                            action()
+                            isPresented.toggle() // 액션 수행 후 창을 닫는다
+                        }
+                        .padding(.horizontal, 16)
+                        
+                        Spacer()
+                    }
+                }
+        } else {
+            content
+        }
     }
+}
+
+extension View {
+    func errorAlert(
+        title: String,
+        buttonTitle: String,
+        isPresented: Binding<Bool>,
+        action: @escaping () -> Void
+    ) -> some View {
+        self.modifier(ErrorAlertModifier(title: title, buttonTitle: buttonTitle, action: action, isPresented: isPresented))
+    }
+    
+    func errorAlert(title: String, buttonTitle: String, isPresented: Binding<Bool>) -> some View {
+        self.modifier(
+            ErrorAlertModifier(
+                title: title,
+                buttonTitle: buttonTitle,
+                action: { },
+                isPresented: isPresented
+            )
+        )
+    }
+}
+
+#Preview {
+    struct TestView: View {
+        @State private var showAlert: Bool = false
+        
+        var body: some View {
+            ZStack {
+                Color.green
+                
+                VStack {
+                    Spacer()
+                    
+                    Button("Show Alert") {
+                        showAlert.toggle()
+                    }
+                    
+                    Spacer()
+                }
+            }
+            .errorAlert(title: "추천 메뉴를 불러오지 못했어요.", buttonTitle: "다시 시도하기", isPresented: $showAlert) {
+                print("안녕안녕")
+            }
+        }
+    }
+    
+    return TestView()
 }
