@@ -10,10 +10,6 @@ import SwiftUI
 struct SchoolHeaderView: View {
     @ObservedObject var viewModel: MainViewModel
     
-    init(viewModel: MainViewModel) {
-        self.viewModel = viewModel
-    }
-    
     var body: some View {
         HStack(spacing: 6) {
             Text(viewModel.schoolName)

@@ -8,5 +8,6 @@
 import Foundation
 
 protocol MainDepsProviding {
+    var navigationRouter: NavigationRouter { get }
     func getMainViewModel() -> MainViewModel
 }
