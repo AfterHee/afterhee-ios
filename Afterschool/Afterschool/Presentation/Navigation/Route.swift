@@ -9,5 +9,5 @@ import Foundation
 
 enum Route: Hashable {
     case schoolSetting(isOnboarding: Bool)
-    case result(category: Category, skipMenus: [String])
+    case result(category: MealCategory, skipMenus: [String])
 }

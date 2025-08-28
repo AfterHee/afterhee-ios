@@ -26,6 +26,7 @@ struct CardFowardSide: View {
             
             Text(recommendation)
                 .font(cardTitleFont)
+                .multilineTextAlignment(.center)
                 .lineHeight(recommendationLineHeight, fontSize: cardTitleFontSize)
                 
         }

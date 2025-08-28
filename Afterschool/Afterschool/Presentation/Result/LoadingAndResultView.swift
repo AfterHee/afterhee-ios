@@ -11,8 +11,10 @@ struct LoadingAndResultView: View {
     // MARK: - Properties
     @StateObject private var viewModel: LoadingAndResultViewModel
     
-    init(viewModel: LoadingAndResultViewModel = LoadingAndResultViewModel()) {
-        self._viewModel = .init(wrappedValue: viewModel)
+    init(deps: LoadingAndResultDepsProviding, category: MealCategory, skipMenus: [String]) {
+        self._viewModel = .init(
+            wrappedValue: deps.getLoadingAndResultViewModel(category: category, skipMenus: skipMenus)
+        )
     }
     
     // MARK: - Constraints
@@ -66,6 +68,14 @@ struct LoadingAndResultView: View {
                 }
             }
         }
+        .errorAlert(
+            title: "추천 메뉴를 불러오지 못했어요.",
+            buttonTitle: "다시 시도하기",
+            isPresented: $viewModel.isError,
+            action: {
+                viewModel.retryButtonTapped()
+            }
+        )
         .onAppear {
             viewModel.viewAppeared()
         }
@@ -77,9 +87,14 @@ struct LoadingAndResultView: View {
                 }
             }
         }
+        .toolbar(.hidden)
     }
 }
 
 #Preview {
-    LoadingAndResultView()
+    LoadingAndResultView(
+        deps: LoadingAndResultDepsProvider(navigationRouter: NavigationRouter()),
+        category: .asian,
+        skipMenus: []
+    )
 }

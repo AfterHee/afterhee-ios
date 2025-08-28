@@ -8,6 +8,7 @@
 import SwiftUI
 
 struct NavigationRouteView: View {
+    @Environment(\.diContainer) private var container
     let path: Route
     
     var body: some View {
@@ -15,7 +16,7 @@ struct NavigationRouteView: View {
         case .schoolSetting(let isOnboarding):
             Text("schoolSetting")
         case .result(let category, let skipMenus):
-            Text("result")
+            LoadingAndResultView(deps: container.loadingAndResultDepsProvider, category: category, skipMenus: skipMenus)
         }
     }
 }
