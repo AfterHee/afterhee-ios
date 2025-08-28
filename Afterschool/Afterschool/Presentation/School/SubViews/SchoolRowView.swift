@@ -2,7 +2,7 @@
 //  SchoolRowView.swift
 //  Afterschool
 //
-//  Created by SchoolSearchApp UI Integration
+//  Created by Sandeul
 //
 
 import SwiftUI
