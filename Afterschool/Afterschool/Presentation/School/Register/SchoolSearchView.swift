@@ -6,10 +6,8 @@
 //
 
 import SwiftUI
-import Combine
 
 /// 학교 검색 메인 뷰
-/// Afterschool 디자인 시스템에 맞춰 구현
 struct SchoolSearchView: View {
     // MARK: - Properties
     @StateObject private var viewModel = SchoolSearchViewModel(searchSchoolUseCase: SearchSchoolUseCase(networkService: NetworkService()))
@@ -18,13 +16,11 @@ struct SchoolSearchView: View {
     var body: some View {
         NavigationStack {
             VStack(spacing: 0) {
-                // 검색바 아래 구분선
                 Rectangle()
                     .fill(Color.afGray100)
                     .frame(height: 2)
                     .padding(.top, 10)
 
-                // 검색 결과 영역
                 searchResultsView
             }
             .background(Color.afWhite)
@@ -32,7 +28,6 @@ struct SchoolSearchView: View {
             .toolbar(.hidden, for: .navigationBar)
         }
         .overlay(
-            // 등록 모달 오버레이
             Group {
                 if viewModel.showRegistrationModal,
                    let selectedSchool = viewModel.selectedSchool {
@@ -57,14 +52,17 @@ private extension SchoolSearchView {
     /// 검색 결과를 표시하는 뷰
     @ViewBuilder
     var searchResultsView: some View {
-        if viewModel.isLoading {
-            // 로딩 상태
+        if viewModel.isSearchLoading {
             Spacer()
-            ProgressView()
-                .progressViewStyle(.circular)
+            LoadingSearchView()
             Spacer()
-        } else if viewModel.schools.isEmpty && !viewModel.searchText.isEmpty {
-            // 검색 결과 없음
+        } else if viewModel.showSearchError {
+            Spacer()
+            ErrorSearchView(viewModel.searchErrorMessage ?? "학교 정보를 불러오지 못했어요.") {
+                viewModel.retrySearch()
+            }
+            Spacer()
+        } else if viewModel.searchResults.isEmpty && !viewModel.searchText.isEmpty {
             Spacer()
             VStack(spacing: 16) {
                 Image(systemName: "magnifyingglass")
@@ -77,10 +75,9 @@ private extension SchoolSearchView {
             }
             Spacer()
         } else {
-            // 검색 결과 목록
             ScrollView {
                 LazyVStack(spacing: 0) {
-                    ForEach(viewModel.schools) { school in
+                    ForEach(viewModel.searchResults) { school in
                         SchoolRowView(
                             school: school,
                             searchText: viewModel.searchText,
@@ -89,8 +86,7 @@ private extension SchoolSearchView {
                             viewModel.selectSchool(school)
                         }
 
-                        // 구분선 (마지막 항목 제외)
-                        if school.id != viewModel.schools.last?.id {
+                        if school.id != viewModel.searchResults.last?.id {
                             Divider()
                                 .background(Color.afGray100)
                                 .padding(.horizontal, 20)
@@ -99,109 +95,6 @@ private extension SchoolSearchView {
                 }
             }
         }
-    }
-}
-
-// MARK: - SchoolSearchViewModel (임시)
-/// 학교 검색 뷰모델
-/// TODO: Presentation 레이어의 ViewModel로 이동 필요
-@MainActor
-class SchoolSearchViewModel: ObservableObject {
-    @Published var searchText = ""
-    @Published var schools: [School] = []
-    @Published var isLoading = false
-    @Published var selectedSchool: School?
-    @Published var showRegistrationModal = false
-    @Published var isRegistering = false
-    
-//    let searchSchoolUsecase: SearchSchoolUsecase
-    let searchSchoolUseCase: SearchSchoolUseCase
-    
-    // 현재 선택된 학교 (메인 뷰에서 전달받을 예정)
-    @Published var currentSelectedSchool: School?
-    
-    private var cancellables = Set<AnyCancellable>()
-    
-    init(searchSchoolUseCase: SearchSchoolUseCase) {
-        self.searchSchoolUseCase = searchSchoolUseCase
-        
-        setupSearchDebounce()
-        // 임시로 현재 선택된 학교 설정 (실제로는 메인 뷰에서 전달받음)
-        currentSelectedSchool = School.mockSchools.first
-    }
-    
-    private func setupSearchDebounce() {
-        $searchText
-            .debounce(for: .milliseconds(300), scheduler: DispatchQueue.main)
-            .removeDuplicates()
-            .sink { [weak self] query in
-                self?.searchSchools(query: query)
-            }
-            .store(in: &cancellables)
-    }
-    
-    func searchSchools(query: String) {
-        guard !query.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty else {
-            schools = []
-            return
-        }
-        
-        isLoading = true
-        
-        Task {
-            do {
-                let searchResults = try await searchSchoolUseCase.execute(keyword: query)
-                await MainActor.run {
-                    self.schools = searchResults
-                    self.isLoading = false
-                }
-            } catch {
-                await MainActor.run {
-                    self.schools = []
-                    self.isLoading = false
-                }
-                print("Search error: \(error)")
-            }
-        }
-    }
-    
-    func selectSchool(_ school: School) {
-        // 현재 선택된 학교는 선택할 수 없음
-        guard school.id != currentSelectedSchool?.id else {
-            print("이미 선택된 학교입니다: \(school.name)")
-            return
-        }
-        
-        print("selectSchool called for: \(school.name)")
-        selectedSchool = school
-        showRegistrationModal = true
-        print("showRegistrationModal set to: \(showRegistrationModal)")
-    }
-    
-    func registerSchool() {
-        guard let school = selectedSchool else { return }
-        
-        isRegistering = true
-        
-        // 등록 프로세스 시뮬레이션
-        DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) { [weak self] in
-            self?.isRegistering = false
-            self?.showRegistrationModal = false
-            self?.selectedSchool = nil
-            // 등록 성공 시 현재 선택된 학교 업데이트
-            self?.currentSelectedSchool = school
-            print("Successfully registered: \(school.name)")
-        }
-    }
-    
-    func dismissModal() {
-        showRegistrationModal = false
-        selectedSchool = nil
-    }
-    
-    /// 학교가 현재 선택된 학교인지 확인
-    func isSchoolCurrentlySelected(_ school: School) -> Bool {
-        return school.id == currentSelectedSchool?.id
     }
 }
 

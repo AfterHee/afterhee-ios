@@ -16,7 +16,6 @@ protocol NetworkServiceProtocol {
 class NetworkService: NetworkServiceProtocol {
     func fetchSchools(keyword: String) async throws -> [School] {
         // TODO: 실제 API 호출 구현
-        // 현재는 목업 데이터 반환
         return School.mockSchools.filter { school in
             school.name.localizedCaseInsensitiveContains(keyword) ||
             school.address.localizedCaseInsensitiveContains(keyword)
