@@ -40,9 +40,11 @@ struct RegistrationModal: View {
                     }
                     
                     // 학교 아이콘 (주황색/갈색 톤)
-                    Image(systemName: "building.2")
-                        .font(.system(size: 48))
-                        .foregroundColor(Color(red: 0.8, green: 0.4, blue: 0.2)) // 주황색/갈색 톤
+//                    Image(systemName: "building.2")
+//                        .font(.system(size: 48))
+//                        .foregroundColor(Color(red: 0.8, green: 0.4, blue: 0.2)) // 주황색/갈색 톤
+                    Image(.schoolIcon)
+                        .padding(.bottom, 20)
                 }
                 .padding(.horizontal, 24)
                 .padding(.top, 24)

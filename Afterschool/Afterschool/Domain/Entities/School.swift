@@ -8,17 +8,11 @@
 import Foundation
 
 /// 학교 정보를 담는 엔티티
-/// TODO: Domain/Entities로 이동 필요
+// TODO: Domain/Entities로 이동 필요
 struct School: Identifiable, Equatable {
     let id: String
     let name: String
     let address: String
-    
-    init(id: String, name: String, address: String) {
-        self.id = id
-        self.name = name
-        self.address = address
-    }
 }
 
 // MARK: - Mock Data
