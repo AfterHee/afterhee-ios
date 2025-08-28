@@ -6,6 +6,10 @@
 	objectVersion = 77;
 	objects = {
 
+/* Begin PBXBuildFile section */
+		EEEF72192E6005300091C1BD /* Moya in Frameworks */ = {isa = PBXBuildFile; productRef = EEEF72182E6005300091C1BD /* Moya */; };
+/* End PBXBuildFile section */
+
 /* Begin PBXContainerItemProxy section */
 		EE29B1172E540DE5009CF9D0 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -42,7 +46,6 @@
 				Domain/Interfaces/Repositories/.gitkeep,
 				Domain/UseCases/.gitkeep,
 				Info.plist,
-				Infrastructure/Network/.gitkeep,
 				Presentation/Common/.gitkeep,
 				Presentation/DesignSystem/.gitkeep,
 				Presentation/Result/SubViews/.gitkeep,
@@ -81,6 +84,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				EEEF72192E6005300091C1BD /* Moya in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -141,6 +145,7 @@
 			);
 			name = Afterschool;
 			packageProductDependencies = (
+				EEEF72182E6005300091C1BD /* Moya */,
 			);
 			productName = Afterschool;
 			productReference = EE29B1092E540DE2009CF9D0 /* Afterschool.app */;
@@ -224,6 +229,9 @@
 			);
 			mainGroup = EE29B1002E540DE2009CF9D0;
 			minimizedProjectReferenceProxies = 1;
+			packageReferences = (
+				EEEF72172E6005300091C1BD /* XCRemoteSwiftPackageReference "Moya" */,
+			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = EE29B10A2E540DE2009CF9D0 /* Products */;
 			projectDirPath = "";
@@ -300,6 +308,8 @@
 /* Begin XCBuildConfiguration section */
 		EE29B1282E540DE5009CF9D0 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReferenceAnchor = EE29B10B2E540DE2009CF9D0 /* Afterschool */;
+			baseConfigurationReferenceRelativePath = Application/Secret.xcconfig;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
@@ -364,6 +374,8 @@
 		};
 		EE29B1292E540DE5009CF9D0 /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReferenceAnchor = EE29B10B2E540DE2009CF9D0 /* Afterschool */;
+			baseConfigurationReferenceRelativePath = Application/Secret.xcconfig;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
@@ -431,7 +443,6 @@
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = Afterschool/Info.plist;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
-				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
@@ -460,7 +471,6 @@
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = Afterschool/Info.plist;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
-				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
@@ -589,6 +599,25 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		EEEF72172E6005300091C1BD /* XCRemoteSwiftPackageReference "Moya" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/Moya/Moya.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 15.0.3;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		EEEF72182E6005300091C1BD /* Moya */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = EEEF72172E6005300091C1BD /* XCRemoteSwiftPackageReference "Moya" */;
+			productName = Moya;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = EE29B1012E540DE2009CF9D0 /* Project object */;
 }
