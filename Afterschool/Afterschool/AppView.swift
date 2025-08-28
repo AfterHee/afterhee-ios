@@ -11,8 +11,7 @@ struct AppView: View {
     @Environment(\.diContainer) private var container
     
     var body: some View {
-//        RootView(navigationRouter: container.navigationRouter)
-        SchoolRegisterView()
+        RootView(navigationRouter: container.navigationRouter)
     }
 }
 
