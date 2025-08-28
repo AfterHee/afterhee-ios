@@ -49,6 +49,8 @@ final class MainViewModel: ObservableObject {
     func schoolChangeButtonTapped() {
         print("학교 변경 버튼이 눌렸습니다.")
     }
+    
+    func getRecommendationButtonTapped() {
+        print("추천 받기 버튼이 눌렸습니다.")
+    }
 }
-
-
