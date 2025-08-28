@@ -7,7 +7,7 @@
 
 import Foundation
 
-private extension DailyMenu {
+extension DailyMenu {
     var dateFormatted: String {
         let f = DateFormatter()
         f.locale = .init(identifier: "ko_KR")
