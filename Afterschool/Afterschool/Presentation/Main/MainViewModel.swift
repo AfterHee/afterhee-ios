@@ -51,6 +51,10 @@ final class MainViewModel: ObservableObject {
         }
     }
     
+    var uniqueMenuItemNames: [String] {
+        Array(Set(menus.flatMap { $0.items.map(\.name) }))
+    }
+    
     func selectCategory(_ category: MealCategory) {
         selectedCategory = (selectedCategory == category) ? nil : category // 선택한 카테고리 한 번 더 선택시 미선택(nil)으로 변경
     }
@@ -61,7 +65,9 @@ final class MainViewModel: ObservableObject {
     }
     
     func getRecommendationButtonTapped() {
-        print("추천 받기 버튼이 눌렸습니다.")
+        if let category = selectedCategory {
+            navigationRouter.push(.result(category: category, skipMenus: uniqueMenuItemNames))
+        }
     }
     
     func mainViewAppeared() {
@@ -72,21 +78,57 @@ final class MainViewModel: ObservableObject {
     }
     
     func refreshMenus(today: Date = Date()) async {
-        isLoadingMenu = true; loadErrorMessage = nil
-        defer { isLoadingMenu = false }
-        
+        await MainActor.run {
+            isLoadingMenu = true
+            loadErrorMessage = nil
+        }
         do {
             let lunchDTOs = try await getMealUseCase.execute(today: today)
             let mapped = DailyMenuMapper.map(lunchDTOs)
-            menus = mapped.ensuringPlaceholders(for: today, calendar: .seoul)
-            if let idx = mapped.firstIndex(where: { Calendar.seoul.isDateInToday($0.date) }) {
-                selectedMenuIndex = idx
-            } else {
-                selectedMenuIndex = min(1, max(0, mapped.count - 1))
+            let filled = mapped.ensuringPlaceholders(for: today, calendar: .seoul)
+            
+            await MainActor.run {
+                menus = filled
+                if let idx = filled.firstIndex(where: { Calendar.seoul.isDateInToday($0.date) }) {
+                    selectedMenuIndex = idx
+                } else {
+                    selectedMenuIndex = min(1, max(0, filled.count - 1))
+                }
+                isLoadingMenu = false
             }
         } catch {
-            loadErrorMessage = (error as NSError).localizedDescription
-            menus = []
+            await MainActor.run {
+                loadErrorMessage = (error as NSError).localizedDescription
+                menus = []
+                isLoadingMenu = false
+            }
+        }
+    }
+    
+    @MainActor
+    func onboardingFinished() async {
+        do {
+            try setOnboarindgShownUseCase.execute(value: true)
+        } catch {
+            logger.error("❌ setOnboarindgShownUseCase failed: \(error)")
+        }
+        shouldShowOnboarding = !getOnboarindgShownUseCase.execute()
+        if !shouldShowOnboarding {
+            await refreshMenus()
+            if let selectedSchool = getSelectedSchool.execute() {
+                self.schoolName = selectedSchool.name
+            }
+        }
+    }
+    
+    @MainActor
+    func onboardingDismissed() async {
+        shouldShowOnboarding = !getOnboarindgShownUseCase.execute()
+        if !shouldShowOnboarding {
+            await refreshMenus()
+            if let selectedSchool = getSelectedSchool.execute() {
+                self.schoolName = selectedSchool.name
+            }
         }
     }
 }

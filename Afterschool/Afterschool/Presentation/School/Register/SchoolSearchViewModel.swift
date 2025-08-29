@@ -148,7 +148,7 @@ class SchoolSearchViewModel: ObservableObject {
         do {
             try setSelectedSchoolUseCase.execute(school: school)
             isRegistering = true
-            
+            navigationRouter.pop()
         } catch {
             logger.error("❌ failed to set selected school to UserDefaults")
         }

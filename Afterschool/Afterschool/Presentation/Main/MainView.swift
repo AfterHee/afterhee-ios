@@ -19,7 +19,9 @@ struct MainView: View {
     var body: some View {
         Group {
             if viewModel.shouldShowOnboarding {
-                OnboardingView(shouldShowOnboarding: $viewModel.shouldShowOnboarding, navigationRouter: navigationRouter)
+                OnboardingView(shouldShowOnboarding: $viewModel.shouldShowOnboarding, navigationRouter: navigationRouter, onFinished: {
+                    Task { await viewModel.onboardingFinished() }
+                })
             } else {
                 ZStack {
                     ScrollView {
@@ -49,6 +51,11 @@ struct MainView: View {
         }
         .onAppear {
             viewModel.mainViewAppeared()
+        }
+        .onChange(of: viewModel.shouldShowOnboarding) { _, shown in
+            if !shown {
+                Task { await viewModel.onboardingDismissed() }
+            }
         }
     }
 }
