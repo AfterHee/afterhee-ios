@@ -21,11 +21,13 @@ final class SchoolSearchDepsProvider: SchoolSearchDepsProviding {
         let userDefaultsStorage = UserDefaultsStorage()
         let userDefaultsRepository = UserDefaultsRepository(storage: userDefaultsStorage)
         let setSelectedSchoolUseCase = SetSelectedSchoolUseCase(userDefaultRepository: userDefaultsRepository)
+        let getSelectedSchoolUseCase = GetSelectedSchoolUseCase(userDefaultRepository: userDefaultsRepository)
         
         return SchoolSearchViewModel(
             navigationRouter: navigationRouter,
             getSchoolUseCase: getSchoolUseCase,
-            setSelectedSchoolUseCase: setSelectedSchoolUseCase
+            setSelectedSchoolUseCase: setSelectedSchoolUseCase,
+            getSelectedSchoolUseCase: getSelectedSchoolUseCase
         )
     }
 }

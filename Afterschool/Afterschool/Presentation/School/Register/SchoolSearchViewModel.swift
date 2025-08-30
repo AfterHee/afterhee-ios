@@ -25,9 +25,10 @@ class SchoolSearchViewModel: ObservableObject {
     // MARK: - Dependencies
     let getSchoolUseCase: GetSchoolUseCase
     let setSelectedSchoolUseCase: SetSelectedSchoolUseCase
+    let getSelectedSchoolUseCase: GetSelectedSchoolUseCase
     
     // MARK: - State
-    /// 현재 선택된 학교 (메인 뷰에서 전달받을 예정)
+    /// 현재 선택된 학교
     @Published var currentSelectedSchool: School?
     
     // MARK: - Private Properties
@@ -41,14 +42,16 @@ class SchoolSearchViewModel: ObservableObject {
     init(
         navigationRouter: NavigationRouter,
         getSchoolUseCase: GetSchoolUseCase,
-        setSelectedSchoolUseCase: SetSelectedSchoolUseCase
+        setSelectedSchoolUseCase: SetSelectedSchoolUseCase,
+        getSelectedSchoolUseCase: GetSelectedSchoolUseCase
     ) {
         self.navigationRouter = navigationRouter
         self.getSchoolUseCase = getSchoolUseCase
         self.setSelectedSchoolUseCase = setSelectedSchoolUseCase
+        self.getSelectedSchoolUseCase = getSelectedSchoolUseCase
         setupSearchDebounce()
-        // currentSelectedSchool은 nil로 초기화 (실제 선택된 학교가 없음)
-        currentSelectedSchool = nil
+        // 현재 선택된 학교 로드
+        currentSelectedSchool = getSelectedSchoolUseCase.execute()
     }
     
     // MARK: - Private Methods

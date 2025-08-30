@@ -66,7 +66,7 @@ final class MainViewModel: ObservableObject {
     
     func schoolChangeButtonTapped() {
         print("학교 변경 버튼이 눌렸습니다.")
-        navigationRouter.push(.schoolSetting(isOnboarding: true))
+        navigationRouter.push(.schoolSetting(isOnboarding: false))
     }
     
     func getRecommendationButtonTapped() {
