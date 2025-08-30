@@ -19,7 +19,7 @@ struct SchoolRegisterView: View {
         VStack(spacing: 0) {
             // 구분선
             Rectangle()
-                .fill(Color.afGray100)
+                .fill(Color.afGray50)
                 .frame(height: 8)
             
             // 검색 결과
