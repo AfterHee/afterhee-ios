@@ -49,13 +49,19 @@ struct MainView: View {
                 }
             }
         }
+        .task(id: viewModel.refreshTaskId) {
+            await viewModel.refresh()
+        }
         .onAppear {
             viewModel.mainViewAppeared()
         }
         .onChange(of: viewModel.shouldShowOnboarding) { _, shown in
             if !shown {
-                Task { await viewModel.onboardingDismissed() }
+                viewModel.onboardingDismissed()
             }
+        }
+        .onChange(of: viewModel.navigationPath) { oldValue, newValue in
+            viewModel.navigationPathChanged()
         }
     }
 }

@@ -16,6 +16,7 @@ final class MainViewModel: ObservableObject {
     private let getSelectedSchool: GetSelectedSchoolUseCase
     private let logger = Logger.makeOf("MainViewModel")
     
+    @Published var refreshTaskId: UUID = UUID()
     @Published var schoolName: String = "학교를 선택해 주세요"
     @Published var selectedCategory: MealCategory? = nil
     @Published var shouldShowOnboarding: Bool = false
@@ -25,6 +26,10 @@ final class MainViewModel: ObservableObject {
     @Published var selectedMenuIndex: Int = 1
     
     let categories: [MealCategory] = MealCategory.allCases
+    
+    var navigationPath: [Route] {
+        navigationRouter.path
+    }
     
     init(
         setOnboarindgShownUseCase: SetOnboardingShownUseCase,
@@ -71,10 +76,7 @@ final class MainViewModel: ObservableObject {
     }
     
     func mainViewAppeared() {
-        shouldShowOnboarding = !getOnboarindgShownUseCase.execute()
-        Task { @MainActor in
-            await refreshMenus()
-        }
+        refreshTaskId = UUID()
     }
     
     func refreshMenus(today: Date = Date()) async {
@@ -112,17 +114,22 @@ final class MainViewModel: ObservableObject {
         } catch {
             logger.error("❌ setOnboarindgShownUseCase failed: \(error)")
         }
-        shouldShowOnboarding = !getOnboarindgShownUseCase.execute()
-        if !shouldShowOnboarding {
-            await refreshMenus()
-            if let selectedSchool = getSelectedSchool.execute() {
-                self.schoolName = selectedSchool.name
-            }
+        
+        await refresh()
+    }
+    
+    func onboardingDismissed() {
+        refreshTaskId = UUID()
+    }
+    
+    func navigationPathChanged() {
+        if navigationPath.isEmpty { // Main View Appeared
+            refreshTaskId = UUID()
         }
     }
     
     @MainActor
-    func onboardingDismissed() async {
+    func refresh() async {
         shouldShowOnboarding = !getOnboarindgShownUseCase.execute()
         if !shouldShowOnboarding {
             await refreshMenus()
