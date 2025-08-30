@@ -13,6 +13,8 @@ final class MainViewModel: ObservableObject {
     private let getMealUseCase: GetMealsUseCase
     private let getSelectedSchool: GetSelectedSchoolUseCase
     
+    @Published var isSplashFinished = false
+
     @Published var schoolName: String = "학교를 선택해 주세요"
     @Published var selectedCategory: MealCategory? = nil
     @Published var shouldShowOnboarding: Bool = false
