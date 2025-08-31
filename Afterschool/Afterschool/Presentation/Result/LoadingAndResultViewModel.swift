@@ -86,12 +86,15 @@ extension LoadingAndResultViewModel {
                 
                 skipMenus.append(recommendation)
                 
-                await MainActor.run {
-                    self.recommendationMenuName = recommendation
+                await MainActor.run { [weak self] in
+                    self?.recommendationMenuName = recommendation
                 }
             } catch {
                 logger.error("❌ failed to get recommendation menu: \(error)")
-                isError = true
+                
+                await MainActor.run { [weak self] in
+                    self?.isError = true
+                }
             }
         }
     }
