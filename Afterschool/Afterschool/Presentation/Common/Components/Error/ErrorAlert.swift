@@ -63,7 +63,7 @@ struct ErrorAlertModifier: ViewModifier {
                         
                         ErrorAlert(title: title, buttonTitle: buttonTitle) {
                             action()
-                            isPresented.toggle() // 액션 수행 후 창을 닫는다
+                            isPresented = false // 액션 수행 후 창을 닫는다
                         }
                         .padding(.horizontal, 16)
                         
