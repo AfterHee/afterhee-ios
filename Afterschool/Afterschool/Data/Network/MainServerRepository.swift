@@ -15,10 +15,10 @@ class MainServerRepository: MainServerRepositoryProtocol {
         self.network = network
     }
     
-    func getSchools(keyword: String) async throws -> BaseResponseDTO<[SchoolDTO]> {
+    func getSchools(keyword: String) async throws -> BaseResponseDTO<[SchoolDTO]?> {
         do {
             let target: MainServerTarget = .getSchool(keyword: keyword)
-            let value: BaseResponseDTO<[SchoolDTO]> = try await network.task(target)
+            let value: BaseResponseDTO<[SchoolDTO]?> = try await network.task(target)
             return value
         } catch {
             throw error

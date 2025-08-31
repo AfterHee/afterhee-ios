@@ -8,15 +8,15 @@
 import Foundation
 
 struct SetOnboardingShownUseCase {
-    let UserDefaultRepository: UserDefaultsRepositoryProtocol
+    let userDefaultRepository: UserDefaultsRepositoryProtocol
     
-    init(UserDefaultRepository: UserDefaultsRepositoryProtocol) {
-        self.UserDefaultRepository = UserDefaultRepository
+    init(userDefaultRepository: UserDefaultsRepositoryProtocol) {
+        self.userDefaultRepository = userDefaultRepository
     }
     
     func execute(value: Bool) throws {
         do {
-            try UserDefaultRepository.save(value, forKey: .onboardingShown)
+            try userDefaultRepository.save(value, forKey: .onboardingShown)
         } catch {
             throw DomainError.dataLayerError(cause: error)
         }

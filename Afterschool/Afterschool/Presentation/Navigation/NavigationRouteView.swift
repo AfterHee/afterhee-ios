@@ -14,7 +14,11 @@ struct NavigationRouteView: View {
     var body: some View {
         switch path {
         case .schoolSetting(let isOnboarding):
-            Text("schoolSetting")
+            if isOnboarding {
+                SchoolRegisterView(deps: container.schoolSearchDepsProvider)
+            } else {
+                SchoolSearchChangeView(deps: container.schoolSearchDepsProvider)
+            }
         case .result(let category, let skipMenus):
             LoadingAndResultView(deps: container.loadingAndResultDepsProvider, category: category, skipMenus: skipMenus)
         }

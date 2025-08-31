@@ -8,7 +8,7 @@
 import SwiftUI
 
 final class NavigationRouter: ObservableObject {
-    @Published var path = NavigationPath()
+    @Published var path: [Route] = []
 
     func push(_ route: Route) {
         path.append(route)
@@ -21,6 +21,6 @@ final class NavigationRouter: ObservableObject {
     }
 
     func reset() {
-        path = NavigationPath()
+        path = []
     }
 }
