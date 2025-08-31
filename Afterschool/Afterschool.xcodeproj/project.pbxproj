@@ -38,6 +38,7 @@
 		0D378FFE2E607AD2004A26C7 /* Exceptions for "Afterschool" folder in "Afterschool" target */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
+				"GoogleService-Info.plist.example",
 				Info.plist,
 			);
 			target = EE29B1082E540DE2009CF9D0 /* Afterschool */;
