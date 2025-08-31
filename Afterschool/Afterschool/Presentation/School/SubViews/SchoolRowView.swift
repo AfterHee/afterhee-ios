@@ -29,7 +29,7 @@ struct SchoolRowView: View {
                     // 학교 주소
                     Text(school.address)
                         .font(.afRegular14)
-                        .foregroundColor(isDisabled ? .afGray400 : .afGray700)
+                        .foregroundColor(isDisabled ? .afGray200 : .afGray400)
                 }
                 Spacer()
             }
