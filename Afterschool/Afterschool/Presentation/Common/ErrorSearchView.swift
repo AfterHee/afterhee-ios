@@ -20,8 +20,8 @@ struct ErrorSearchView: View {
                 .multilineTextAlignment(.center)
             
             Button(action: retryAction) {
-                Text("다시 시도")
-                    .font(.afMedium16)
+                Text("다시 시도하기")
+                    .font(.afMedium14)
                     .foregroundColor(.afGray400)
                     .frame(width: 117, height: 41)
                     .background(Color.afGray50)
