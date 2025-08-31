@@ -19,11 +19,11 @@ struct GetMealsUseCase {
     
     /// UserDefaults에 저장된 선택 학교 기준으로 어제/오늘/내일 '중식'만 반환
     func execute(today: Date = Date()) async throws -> [MealDTO] {
-        guard let selected: SchoolSelection = userDefaultsRepository.load(SchoolSelection.self, forKey: .selectedSchool) else {
+        guard let selected: School = userDefaultsRepository.load(School.self, forKey: .selectedSchool) else {
             throw GetMealsError.selectedSchoolNotFound
         }
         return try await execute(
-            eduOfficeCode: selected.eduOfficeCode,
+            eduOfficeCode: selected.sidoCode,
             schoolCode: selected.adminCode,
             today: today
         )

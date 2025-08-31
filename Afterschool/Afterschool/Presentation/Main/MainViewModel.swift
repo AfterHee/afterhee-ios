@@ -6,15 +6,18 @@
 //
 
 import Foundation
+import os.log
 
 final class MainViewModel: ObservableObject {
     private var navigationRouter: NavigationRouter
+    private let setOnboarindgShownUseCase: SetOnboardingShownUseCase
     private let getOnboarindgShownUseCase: GetOnboardingShownUseCase
     private let getMealUseCase: GetMealsUseCase
     private let getSelectedSchool: GetSelectedSchoolUseCase
+    private let logger = Logger.makeOf("MainViewModel")
     
     @Published var isSplashFinished = false
-
+    @Published var refreshTaskId: UUID = UUID()
     @Published var schoolName: String = "학교를 선택해 주세요"
     @Published var selectedCategory: MealCategory? = nil
     @Published var shouldShowOnboarding: Bool = false
@@ -25,7 +28,12 @@ final class MainViewModel: ObservableObject {
     
     let categories: [MealCategory] = MealCategory.allCases
     
+    var navigationPath: [Route] {
+        navigationRouter.path
+    }
+    
     init(
+        setOnboarindgShownUseCase: SetOnboardingShownUseCase,
         getOnboarindgShownUseCase: GetOnboardingShownUseCase,
         getMealUseCase: GetMealsUseCase,
         getSelectedSchool: GetSelectedSchoolUseCase,
@@ -33,14 +41,24 @@ final class MainViewModel: ObservableObject {
         navigationRouter: NavigationRouter,
     ) {
         self.navigationRouter = navigationRouter
+        self.setOnboarindgShownUseCase = setOnboarindgShownUseCase
         self.getOnboarindgShownUseCase = getOnboarindgShownUseCase
         self.getMealUseCase = getMealUseCase
         self.getSelectedSchool = getSelectedSchool
         
-        guard let selectedSchool = getSelectedSchool.execute() else {
-            fatalError("Selected school must exist before MainViewModel initialization.")
+        if let selectedSchool = getSelectedSchool.execute() {
+            self.schoolName = selectedSchool.name
+        } else {
+            do {
+                try setOnboarindgShownUseCase.execute(value: false)
+            } catch {
+                logger.error("❌ setOnboarindgShownUseCase failed: \(error)")
+            }
         }
-        self.schoolName = selectedSchool.name
+    }
+    
+    var uniqueMenuItemNames: [String] {
+        Array(Set(menus.flatMap { $0.items.map(\.name) }))
     }
     
     func selectCategory(_ category: MealCategory) {
@@ -49,34 +67,76 @@ final class MainViewModel: ObservableObject {
     
     func schoolChangeButtonTapped() {
         print("학교 변경 버튼이 눌렸습니다.")
-        navigationRouter.push(.schoolSetting(isOnboarding: true))
+        navigationRouter.push(.schoolSetting(isOnboarding: false))
     }
     
     func getRecommendationButtonTapped() {
-        print("추천 받기 버튼이 눌렸습니다.")
+        if let category = selectedCategory {
+            navigationRouter.push(.result(category: category, skipMenus: uniqueMenuItemNames))
+        }
     }
     
     func mainViewAppeared() {
-        shouldShowOnboarding = !getOnboarindgShownUseCase.execute()
-        Task { await refreshMenus() }
+        refreshTaskId = UUID()
     }
     
     func refreshMenus(today: Date = Date()) async {
-        isLoadingMenu = true; loadErrorMessage = nil
-        defer { isLoadingMenu = false }
-        
+        await MainActor.run {
+            isLoadingMenu = true
+            loadErrorMessage = nil
+        }
         do {
             let lunchDTOs = try await getMealUseCase.execute(today: today)
             let mapped = DailyMenuMapper.map(lunchDTOs)
-            menus = mapped.ensuringPlaceholders(for: today, calendar: .seoul)
-            if let idx = mapped.firstIndex(where: { Calendar.seoul.isDateInToday($0.date) }) {
-                selectedMenuIndex = idx
-            } else {
-                selectedMenuIndex = min(1, max(0, mapped.count - 1))
+            let filled = mapped.ensuringPlaceholders(for: today, calendar: .seoul)
+            
+            await MainActor.run {
+                menus = filled
+                if let idx = filled.firstIndex(where: { Calendar.seoul.isDateInToday($0.date) }) {
+                    selectedMenuIndex = idx
+                } else {
+                    selectedMenuIndex = min(1, max(0, filled.count - 1))
+                }
+                isLoadingMenu = false
             }
         } catch {
-            loadErrorMessage = (error as NSError).localizedDescription
-            menus = []
+            await MainActor.run {
+                loadErrorMessage = (error as NSError).localizedDescription
+                menus = []
+                isLoadingMenu = false
+            }
+        }
+    }
+    
+    @MainActor
+    func onboardingFinished() async {
+        do {
+            try setOnboarindgShownUseCase.execute(value: true)
+        } catch {
+            logger.error("❌ setOnboarindgShownUseCase failed: \(error)")
+        }
+        
+        await refresh()
+    }
+    
+    func onboardingDismissed() {
+        refreshTaskId = UUID()
+    }
+    
+    func navigationPathChanged() {
+        if navigationPath.isEmpty { // Main View Appeared
+            refreshTaskId = UUID()
+        }
+    }
+    
+    @MainActor
+    func refresh() async {
+        shouldShowOnboarding = !getOnboarindgShownUseCase.execute()
+        if !shouldShowOnboarding {
+            await refreshMenus()
+            if let selectedSchool = getSelectedSchool.execute() {
+                self.schoolName = selectedSchool.name
+            }
         }
     }
 }

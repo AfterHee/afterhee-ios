@@ -97,7 +97,11 @@ struct RegistrationChangeModal: View {
             school: School(
                 id: "1",
                 name: "애플중학교",
-                address: "경상북도 포항시"
+                address: "경상북도 포항시",
+                detailAddress: "애플로 123",
+                adminCode: "G10",
+                sidoCode: "47",
+                sidoName: "경상북도"
             ),
             onRegister: {
                 print("변경하기 버튼 눌림!")
@@ -106,50 +110,5 @@ struct RegistrationChangeModal: View {
                 print("X 버튼 눌림!")
             }
         )
-        
-        // 긴 학교명, 짧은 주소 예시
-//        RegistrationModal(
-//            school: School(
-//                id: "2",
-//                name: "애플디자인고등학교",
-//                address: "경상북도 포항시"
-//            ),
-//            onRegister: {
-//                print("변경하기 버튼 눌림!")
-//            },
-//            onDismiss: {
-//                print("X 버튼 눌림!")
-//            }
-//        )
-        
-        // 짧은 학교명, 긴 주소 예시
-//        RegistrationModal(
-//            school: School(
-//                id: "3",
-//                name: "애플중학교",
-//                address: "서울특별시 강남구 테헤란로 123길 45, 6층"
-//            ),
-//            onRegister: {
-//                print("변경하기 버튼 눌림!")
-//            },
-//            onDismiss: {
-//                print("X 버튼 눌림!")
-//            }
-//        )
-        
-        // 긴 학교명, 긴 주소 예시
-//        RegistrationModal(
-//            school: School(
-//                id: "4",
-//                name: "애플디자인고등학교",
-//                address: "서울특별시 강남구 테헤란로 123길 45, 6층"
-//            ),
-//            onRegister: {
-//                print("변경하기 버튼 눌림!")
-//            },
-//            onDismiss: {
-//                print("X 버튼 눌림!")
-//            }
-//        )
     }
 }

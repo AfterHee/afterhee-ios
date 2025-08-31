@@ -2,43 +2,46 @@
 //  ErrorSearchView.swift
 //  Afterschool
 //
-//  Created by 산들 on 8/28/25.
+//  Created by SchoolSearchApp UI Integration
 //
 
 import SwiftUI
 
-/// 학교 검색 에러 상태를 표시하는 컴포넌트
+/// 검색 에러 상태를 표시하는 뷰
 struct ErrorSearchView: View {
-    let searchErrorMessage: String
-    let retrySearchAction: () -> Void
-    
-    init(_ searchErrorMessage: String = "학교 정보를 불러오지 못했어요.", retrySearchAction: @escaping () -> Void) {
-        self.searchErrorMessage = searchErrorMessage
-        self.retrySearchAction = retrySearchAction
-    }
+    let errorMessage: String
+    let retryAction: () -> Void
     
     var body: some View {
-        VStack(spacing: 20) {
-            Text(searchErrorMessage)
-                .font(.afMedium16)
+        VStack(spacing: 16) {
+            Image(systemName: "exclamationmark.triangle")
+                .font(.system(size: 48))
                 .foregroundColor(.afGray400)
+            
+            Text(errorMessage)
+                .font(.afMedium16)
+                .foregroundColor(.afGray700)
                 .multilineTextAlignment(.center)
             
-            Button(action: retrySearchAction) {
-                Text("다시 시도하기")
-                    .font(.afMedium14)
-                    .foregroundColor(.afGray400)
+            Button(action: retryAction) {
+                Text("다시 시도")
+                    .font(.afMedium16)
+                    .foregroundColor(.afWhite)
                     .padding(.horizontal, 24)
                     .padding(.vertical, 12)
-                    .background(Color.afGray50)
-                    .cornerRadius(12)
+                    .background(Color.afBlack)
+                    .cornerRadius(8)
             }
+            .buttonStyle(PlainButtonStyle())
         }
     }
 }
 
+// MARK: - Preview
 #Preview {
-    ErrorSearchView {
-        print("Retry search tapped")
+    ErrorSearchView(
+        errorMessage: "학교 정보를 불러오지 못했어요."
+    ) {
+        print("Retry tapped")
     }
 }

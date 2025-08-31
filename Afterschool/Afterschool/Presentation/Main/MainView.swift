@@ -8,16 +8,20 @@
 import SwiftUI
 
 struct MainView: View {
+    @ObservedObject private var navigationRouter: NavigationRouter
     @StateObject private var viewModel: MainViewModel
     
     init(deps: MainDepsProviding) {
+        self._navigationRouter = ObservedObject(wrappedValue: deps.navigationRouter)
         self._viewModel = StateObject(wrappedValue: deps.getMainViewModel())
     }
     
     var body: some View {
         Group {
             if viewModel.shouldShowOnboarding {
-                OnboardingView(shouldShowOnboarding: $viewModel.shouldShowOnboarding)
+                OnboardingView(shouldShowOnboarding: $viewModel.shouldShowOnboarding, navigationRouter: navigationRouter, onFinished: {
+                    Task { await viewModel.onboardingFinished() }
+                })
             } else {
                 if viewModel.isSplashFinished {
                     ZStack {
@@ -53,8 +57,19 @@ struct MainView: View {
                 }
             }
         }
+        .task(id: viewModel.refreshTaskId) {
+            await viewModel.refresh()
+        }
         .onAppear {
             viewModel.mainViewAppeared()
+        }
+        .onChange(of: viewModel.shouldShowOnboarding) { _, shown in
+            if !shown {
+                viewModel.onboardingDismissed()
+            }
+        }
+        .onChange(of: viewModel.navigationPath) { oldValue, newValue in
+            viewModel.navigationPathChanged()
         }
     }
 }
