@@ -23,29 +23,37 @@ struct MainView: View {
                     Task { await viewModel.onboardingFinished() }
                 })
             } else {
-                ZStack {
-                    ScrollView {
-                        VStack(spacing: 56) {
-                            VStack(alignment: .leading, spacing: 16) { 
-                                SchoolHeaderView(viewModel: viewModel)
-                                MealSectionView(viewModel: viewModel)
+                if viewModel.isSplashFinished {
+                    ZStack {
+                        ScrollView {
+                            VStack(spacing: 56) {
+                                VStack(alignment: .leading, spacing: 16) {
+                                    SchoolHeaderView(viewModel: viewModel)
+                                    MealSectionView(viewModel: viewModel)
+                                }
+                                CategorySelectSectionView(viewModel: viewModel)
                             }
-                            CategorySelectSectionView(viewModel: viewModel)
-                            
+                            .safeAreaPadding(.horizontal, 16)
+                            Spacer().frame(height: 120)
                         }
-                        .safeAreaPadding(.horizontal, 16)
-                        Spacer().frame(height: 120)
-                    }
-                    .scrollIndicators(.hidden)
-                    VStack {
-                        Spacer()
-                        
-                        PrimaryButton(type: .getSuggestion, disabled: viewModel.selectedCategory == nil) {
-                            viewModel.getRecommendationButtonTapped()
+                        .scrollIndicators(.hidden)
+                        VStack {
+                            Spacer()
+                            PrimaryButton(type: .getSuggestion, disabled: viewModel.selectedCategory == nil) {
+                                viewModel.getRecommendationButtonTapped()
+                            }
+                            .primaryButtonDefaultFrame()
+                            .safeAreaPadding(.horizontal, 16)
                         }
-                        .primaryButtonDefaultFrame()
-                        .safeAreaPadding(.horizontal, 16)
                     }
+                } else {
+                    SplashView()
+                        .ignoresSafeArea()
+                        .frame(maxWidth: .infinity, maxHeight: .infinity)
+                        .task {
+                            try? await Task.sleep(nanoseconds: 1_250_000_000)
+                            viewModel.isSplashFinished = true
+                        }
                 }
             }
         }

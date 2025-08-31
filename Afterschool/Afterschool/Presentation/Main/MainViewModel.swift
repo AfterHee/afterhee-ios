@@ -16,6 +16,7 @@ final class MainViewModel: ObservableObject {
     private let getSelectedSchool: GetSelectedSchoolUseCase
     private let logger = Logger.makeOf("MainViewModel")
     
+    @Published var isSplashFinished = false
     @Published var refreshTaskId: UUID = UUID()
     @Published var schoolName: String = "학교를 선택해 주세요"
     @Published var selectedCategory: MealCategory? = nil
