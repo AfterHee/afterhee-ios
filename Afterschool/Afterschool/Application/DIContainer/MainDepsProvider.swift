@@ -18,10 +18,11 @@ final class MainDepsProvider: MainDepsProviding {
         let userDefaultsStorage = UserDefaultsStorage()
         let userDefaultsRepository = UserDefaultsRepository(storage: userDefaultsStorage)
         let mainServerRepository = MainServerRepository()
+        let setOnboarindgShownUseCase = SetOnboardingShownUseCase(userDefaultRepository: userDefaultsRepository)
         let getOnboarindgShownUseCase = GetOnboardingShownUseCase(userDefaultRepository: userDefaultsRepository)
 
         let getSelectedSchoolUseCase = GetSelectedSchoolUseCase(userDefaultRepository: userDefaultsRepository)
         let getMealUseCase = GetMealsUseCase(serverRepository: mainServerRepository, userDefaultsRepository: userDefaultsRepository)
-        return MainViewModel(getOnboarindgShownUseCase: getOnboarindgShownUseCase, getMealUseCase: getMealUseCase, getSelectedSchool: getSelectedSchoolUseCase, navigationRouter: navigationRouter)
+        return MainViewModel(setOnboarindgShownUseCase: setOnboarindgShownUseCase, getOnboarindgShownUseCase: getOnboarindgShownUseCase, getMealUseCase: getMealUseCase, getSelectedSchool: getSelectedSchoolUseCase, navigationRouter: navigationRouter)
     }
 }

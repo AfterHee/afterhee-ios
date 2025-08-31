@@ -2,32 +2,27 @@
 //  LoadingSearchView.swift
 //  Afterschool
 //
-//  Created by 산들 on 8/28/25.
+//  Created by SchoolSearchApp UI Integration
 //
 
 import SwiftUI
 
-/// 학교 검색 로딩 상태를 표시하는 컴포넌트
+/// 검색 중 로딩 상태를 표시하는 뷰
 struct LoadingSearchView: View {
-    let searchMessage: String
-    
-    init(_ searchMessage: String = "학교 정보 불러오는 중...") {
-        self.searchMessage = searchMessage
-    }
-    
     var body: some View {
         VStack(spacing: 16) {
             ProgressView()
-                .progressViewStyle(.circular)
                 .scaleEffect(1.2)
+                .progressViewStyle(CircularProgressViewStyle(tint: .afGray400))
             
-            Text(searchMessage)
-                .font(.afRegular16)
-                .foregroundColor(.afGray400)
+            Text("학교 정보를 불러오는 중...")
+                .font(.afMedium16)
+                .foregroundColor(.afGray700)
         }
     }
 }
 
+// MARK: - Preview
 #Preview {
     LoadingSearchView()
 }

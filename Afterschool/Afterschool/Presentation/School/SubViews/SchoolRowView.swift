@@ -129,7 +129,11 @@ private extension SchoolRowView {
             school: School(
                 id: "1",
                 name: "애플디자인고등학교",
-                address: "경상북도 포항시 북구"
+                address: "경상북도 포항시 북구",
+                detailAddress: "애플로 123",
+                adminCode: "G10",
+                sidoCode: "47",
+                sidoName: "경상북도"
             ),
             searchText: "애플",
             isDisabled: false
@@ -146,7 +150,11 @@ private extension SchoolRowView {
             school: School(
                 id: "2",
                 name: "포항애플중학교",
-                address: "경상북도 포항시 북구"
+                address: "경상북도 포항시 북구",
+                detailAddress: "애플로 456",
+                adminCode: "G10",
+                sidoCode: "47",
+                sidoName: "경상북도"
             ),
             searchText: "애",
             isDisabled: true
@@ -163,7 +171,11 @@ private extension SchoolRowView {
             school: School(
                 id: "3",
                 name: "애플공업고등학교",
-                address: "경상북도 포항시 북구"
+                address: "경상북도 포항시 북구",
+                detailAddress: "애플로 789",
+                adminCode: "G10",
+                sidoCode: "47",
+                sidoName: "경상북도"
             ),
             searchText: "",
             isDisabled: false

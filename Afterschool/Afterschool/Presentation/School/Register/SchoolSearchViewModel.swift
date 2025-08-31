@@ -7,10 +7,10 @@
 
 import Foundation
 import Combine
+import os.log
 
 // MARK: - SchoolSearchViewModel
 /// 학교 검색 기능을 담당하는 ViewModel
-@MainActor
 class SchoolSearchViewModel: ObservableObject {
     // MARK: - Published Properties
     @Published var searchText = ""
@@ -23,22 +23,35 @@ class SchoolSearchViewModel: ObservableObject {
     @Published var isRegistering = false
     
     // MARK: - Dependencies
-    let searchSchoolUseCase: SearchSchoolUseCase
+    let getSchoolUseCase: GetSchoolUseCase
+    let setSelectedSchoolUseCase: SetSelectedSchoolUseCase
+    let getSelectedSchoolUseCase: GetSelectedSchoolUseCase
     
     // MARK: - State
-    /// 현재 선택된 학교 (메인 뷰에서 전달받을 예정)
+    /// 현재 선택된 학교
     @Published var currentSelectedSchool: School?
     
     // MARK: - Private Properties
     private var cancellables = Set<AnyCancellable>()
-    private let searchDebounceTime: TimeInterval = 0.3
-    private let minSearchLength = 1
+    private let searchDebounceTime: TimeInterval = 0.5  // 디바운스 시간 증가로 API 호출 최적화
+    private var currentSearchTask: Task<Void, Never>?  // 중복 요청 방지
+    private let navigationRouter: NavigationRouter
+    private let logger = Logger.makeOf("SchoolSearchViewModel")
     
     // MARK: - Initialization
-    init(searchSchoolUseCase: SearchSchoolUseCase) {
-        self.searchSchoolUseCase = searchSchoolUseCase
+    init(
+        navigationRouter: NavigationRouter,
+        getSchoolUseCase: GetSchoolUseCase,
+        setSelectedSchoolUseCase: SetSelectedSchoolUseCase,
+        getSelectedSchoolUseCase: GetSelectedSchoolUseCase
+    ) {
+        self.navigationRouter = navigationRouter
+        self.getSchoolUseCase = getSchoolUseCase
+        self.setSelectedSchoolUseCase = setSelectedSchoolUseCase
+        self.getSelectedSchoolUseCase = getSelectedSchoolUseCase
         setupSearchDebounce()
-        currentSelectedSchool = School.mockSchools.first
+        // 현재 선택된 학교 로드
+        currentSelectedSchool = getSelectedSchoolUseCase.execute()
     }
     
     // MARK: - Private Methods
@@ -57,34 +70,64 @@ class SchoolSearchViewModel: ObservableObject {
     /// 학교 검색 실행
     /// - Parameter query: 검색할 키워드
     func searchSchools(query: String) {
+        // 빈 쿼리일 때는 검색하지 않음
         let trimmedQuery = query.trimmingCharacters(in: .whitespacesAndNewlines)
-        
-        guard !trimmedQuery.isEmpty && trimmedQuery.count >= minSearchLength else {
+        guard !trimmedQuery.isEmpty else {
             searchResults = []
+            isSearchLoading = false
+            searchErrorMessage = nil
+            showSearchError = false
             return
         }
+        
+        // 이전 검색 작업 취소
+        currentSearchTask?.cancel()
         
         isSearchLoading = true
         searchErrorMessage = nil
         showSearchError = false
         
-        Task {
+        currentSearchTask = Task {
             do {
-                let results = try await searchSchoolUseCase.execute(keyword: trimmedQuery)
+                let schools = try await getSchoolUseCase.execute(keyword: trimmedQuery)
+                
+                // data가 null인 경우 빈 결과로 처리
+                
+                // 작업이 취소되었는지 확인
+                guard !Task.isCancelled else { return }
+                
                 await MainActor.run {
-                    self.searchResults = results
+                    self.searchResults = schools
                     self.isSearchLoading = false
+                    // 성공적인 응답이므로 에러 상태 초기화
+                    self.searchErrorMessage = nil
+                    self.showSearchError = false
                 }
             } catch {
+                // 작업이 취소되었는지 확인
+                guard !Task.isCancelled else { return }
+                
                 await MainActor.run {
                     self.searchResults = []
                     self.isSearchLoading = false
-                    self.searchErrorMessage = error.localizedDescription
+                    self.searchErrorMessage = getErrorMessage(from: error)
                     self.showSearchError = true
                 }
                 print("Search error: \(error)")
             }
         }
+    }
+    
+    /// 에러 메시지를 사용자 친화적으로 변환
+    /// - Parameter error: 원본 에러
+    /// - Returns: 사용자 친화적인 에러 메시지
+    private func getErrorMessage(from error: Error) -> String {
+        if let networkError = error as? NetworkError {
+            return networkError.errorDescription ?? "학교 정보를 불러오지 못했어요."
+        }
+        
+        // 일반적인 에러 처리
+        return "학교 정보를 불러오지 못했어요."
     }
     
     /// 학교 선택 처리
@@ -105,20 +148,12 @@ class SchoolSearchViewModel: ObservableObject {
     func registerSchool() {
         guard let school = selectedSchool else { return }
         
-        isRegistering = true
-        
-        // TODO: - Actual Registration API Call
-        // 실제 등록 API 호출로 변경
-        // - API 엔드포인트 구현
-        // - 성공/실패 처리
-        // - 에러 핸들링
-        
-        DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) { [weak self] in
-            self?.isRegistering = false
-            self?.showRegistrationModal = false
-            self?.selectedSchool = nil
-            self?.currentSelectedSchool = school
-            print("Successfully registered: \(school.name)")
+        do {
+            try setSelectedSchoolUseCase.execute(school: school)
+            isRegistering = true
+            navigationRouter.pop()
+        } catch {
+            logger.error("❌ failed to set selected school to UserDefaults")
         }
     }
     
@@ -136,6 +171,9 @@ class SchoolSearchViewModel: ObservableObject {
     
     /// 검색 재시도
     func retrySearch() {
+        guard !searchText.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty else {
+            return
+        }
         searchSchools(query: searchText)
     }
     
