@@ -137,6 +137,15 @@ class SchoolSearchViewModel: ObservableObject {
         selectedSchool = school
         showRegistrationModal = true
         print("showRegistrationModal set to: \(showRegistrationModal)")
+        
+        // 키보드 내리기
+        dismissKeyboard()
+    }
+    
+    /// 키보드를 내리는 메서드
+    func dismissKeyboard() {
+        // SearchBar의 dismissKeyboard를 호출하기 위해 NotificationCenter 사용
+        NotificationCenter.default.post(name: .dismissKeyboard, object: nil)
     }
     
     /// 학교 등록 처리
