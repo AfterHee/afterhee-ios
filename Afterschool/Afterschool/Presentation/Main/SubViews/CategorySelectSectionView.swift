@@ -37,7 +37,7 @@ struct CategorySelectSectionView: View {
                     }
                 }
             }
-            .padding(.horizontal, 7)
         }
+        .padding(.horizontal, 7) // 23 - 16 = 7
     }
 }
