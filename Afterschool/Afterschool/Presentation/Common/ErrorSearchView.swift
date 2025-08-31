@@ -14,23 +14,18 @@ struct ErrorSearchView: View {
     
     var body: some View {
         VStack(spacing: 16) {
-            Image(systemName: "exclamationmark.triangle")
-                .font(.system(size: 48))
-                .foregroundColor(.afGray400)
-            
             Text(errorMessage)
                 .font(.afMedium16)
-                .foregroundColor(.afGray700)
+                .foregroundColor(.afGray400)
                 .multilineTextAlignment(.center)
             
             Button(action: retryAction) {
                 Text("다시 시도")
                     .font(.afMedium16)
-                    .foregroundColor(.afWhite)
-                    .padding(.horizontal, 24)
-                    .padding(.vertical, 12)
-                    .background(Color.afBlack)
-                    .cornerRadius(8)
+                    .foregroundColor(.afGray400)
+                    .frame(width: 117, height: 41)
+                    .background(Color.afGray50)
+                    .cornerRadius(12)
             }
             .buttonStyle(PlainButtonStyle())
         }

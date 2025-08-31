@@ -122,11 +122,6 @@ class SchoolSearchViewModel: ObservableObject {
     /// - Parameter error: 원본 에러
     /// - Returns: 사용자 친화적인 에러 메시지
     private func getErrorMessage(from error: Error) -> String {
-        if let networkError = error as? NetworkError {
-            return networkError.errorDescription ?? "학교 정보를 불러오지 못했어요."
-        }
-        
-        // 일반적인 에러 처리
         return "학교 정보를 불러오지 못했어요."
     }
     
