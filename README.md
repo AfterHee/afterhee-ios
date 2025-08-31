@@ -80,6 +80,11 @@ Swift 6.0
 
 <br>
 
+## 인스트럭션
+
+- `Secret.xcconfig`를 전달받아 프로젝트 디렉토리 내에 복사하고 타겟에 추가
+- `GoogleService-Info.plist`를 전달받아 프로젝트 루트 디렉토리 내에 복사하고 타겟에 추가
+
 ## 📱 화면 구성
 <table>
   <tr>
