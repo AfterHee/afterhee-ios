@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		3D3AB51D2E640BB60047897A /* FirebaseAnalytics in Frameworks */ = {isa = PBXBuildFile; productRef = 3D3AB51C2E640BB60047897A /* FirebaseAnalytics */; };
 		EEEF72192E6005300091C1BD /* Moya in Frameworks */ = {isa = PBXBuildFile; productRef = EEEF72182E6005300091C1BD /* Moya */; };
 /* End PBXBuildFile section */
 
@@ -38,13 +39,6 @@
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
 				Info.plist,
-				Presentation/Common/.gitkeep,
-				Presentation/DesignSystem/.gitkeep,
-				Presentation/Result/SubViews/.gitkeep,
-				Presentation/School/Change/.gitkeep,
-				Presentation/School/Register/.gitkeep,
-				Presentation/School/SubViews/.gitkeep,
-				Resource/Fonts/.gitkeep,
 			);
 			target = EE29B1082E540DE2009CF9D0 /* Afterschool */;
 		};
@@ -76,6 +70,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				3D3AB51D2E640BB60047897A /* FirebaseAnalytics in Frameworks */,
 				EEEF72192E6005300091C1BD /* Moya in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -138,6 +133,7 @@
 			name = Afterschool;
 			packageProductDependencies = (
 				EEEF72182E6005300091C1BD /* Moya */,
+				3D3AB51C2E640BB60047897A /* FirebaseAnalytics */,
 			);
 			productName = Afterschool;
 			productReference = EE29B1092E540DE2009CF9D0 /* Afterschool.app */;
@@ -223,6 +219,7 @@
 			minimizedProjectReferenceProxies = 1;
 			packageReferences = (
 				EEEF72172E6005300091C1BD /* XCRemoteSwiftPackageReference "Moya" */,
+				3D3AB51B2E640BB60047897A /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = EE29B10A2E540DE2009CF9D0 /* Products */;
@@ -593,6 +590,14 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
+		3D3AB51B2E640BB60047897A /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/firebase/firebase-ios-sdk";
+			requirement = {
+				kind = exactVersion;
+				version = 12.2.0;
+			};
+		};
 		EEEF72172E6005300091C1BD /* XCRemoteSwiftPackageReference "Moya" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/Moya/Moya.git";
@@ -604,6 +609,11 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
+		3D3AB51C2E640BB60047897A /* FirebaseAnalytics */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 3D3AB51B2E640BB60047897A /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseAnalytics;
+		};
 		EEEF72182E6005300091C1BD /* Moya */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = EEEF72172E6005300091C1BD /* XCRemoteSwiftPackageReference "Moya" */;
