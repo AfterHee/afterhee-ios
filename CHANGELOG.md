@@ -11,6 +11,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- 세로 화면 고정
+- 타겟을 iPhone 전용으로 변경
+
 ### Deprecated
                                                   
 ### Removed
