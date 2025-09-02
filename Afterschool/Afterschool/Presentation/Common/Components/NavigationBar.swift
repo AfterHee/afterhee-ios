@@ -22,37 +22,41 @@ struct NavigationBar<CenterView>: ViewModifier where CenterView: View {
     /// MARK: - Constraints
     private let backButtonImageWidth: CGFloat = 15
     private let backButtonImageHeight: CGFloat = 21
-    private let navBarHeight: CGFloat = 76
+    private let navBarHeight: CGFloat = 60
+    private let navBarInnerBottomPadding: CGFloat = 12
     private let horizontalPadding: CGFloat = 18
     private let inversedBackgroundColor: Color = Color(hex: "545454")
     
     func body(content: Content) -> some View {
         VStack(spacing: 0) {
-            ZStack {
-                HStack { // 좌측 버튼
+            ZStack(alignment: .top) {
+                // 좌측 백 버튼
+                HStack {
                     Button {
                         dismiss()
                     } label: {
                         Image(systemName: "chevron.left")
                             .resizable()
                             .aspectRatio(contentMode: .fit)
-                            .foregroundColor(!inversed ? Color.afBlack : Color.afWhite)
+                            .foregroundStyle(!inversed ? Color.afBlack : Color.afWhite)
                             .frame(width: backButtonImageWidth, height: backButtonImageHeight)
                     }
-                    
                     Spacer()
                 }
-                .frame(height: navBarHeight)
-                .frame(maxWidth: .infinity)
+                .frame(height: navBarHeight - navBarInnerBottomPadding)
+                .frame(maxWidth: .infinity, alignment: .leading)
                 .padding(.horizontal, horizontalPadding)
                 
-                HStack { // 가운데 뷰
+                // 중앙 뷰
+                HStack {
                     Spacer()
                     centerView
-                        .frame(maxHeight: navBarHeight)
                     Spacer()
                 }
+                .frame(height: navBarHeight - navBarInnerBottomPadding)
             }
+            .frame(height: navBarHeight, alignment: .top)
+            .background(!inversed ? Color.afWhite : inversedBackgroundColor)
             .background(!inversed ? Color.afWhite : inversedBackgroundColor)
             .ignoresSafeArea(.all, edges: .horizontal)
             .ignoresSafeArea(.all, edges: .bottom)
@@ -98,7 +102,7 @@ extension UINavigationController: UIGestureRecognizerDelegate {
         navigationBar.isHidden = true
         interactivePopGestureRecognizer?.delegate = self
     }
-
+    
     public func gestureRecognizerShouldBegin(_ gestureRecognizer: UIGestureRecognizer) -> Bool {
         return viewControllers.count > 1 && !UINavigationController.isGestureDisabled
     }
@@ -117,7 +121,7 @@ extension UINavigationController: UIGestureRecognizerDelegate {
         Spacer()
     }
         .afNavigationBar(centerView: demoCenterView)
-//        .afNavigationBar(title: "학교 변경하기")
+    //        .afNavigationBar(title: "학교 변경하기")
     
     NavigationStack {
         NavigationLink("하이") {
