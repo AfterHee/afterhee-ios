@@ -33,37 +33,26 @@ struct MenuCarouselView: View {
             .frame(height: uniformHeight + 70)
             
             HStack(spacing: 16) {
-                if selectedIndex > 0 {
-                    Button {
+                MenuCarouselChevronButton(
+                    type: .previous,
+                    isShowing: selectedIndex > 0
+                ) {
+                    withAnimation(.easeInOut(duration: 0.25)) {
                         selectedIndex -= 1
-                    } label: {
-                        Image(systemName: "chevron.left")
-                            .resizable()
-                            .frame(width: 18, height: 29)
-                            .foregroundStyle(Color.afGray400)
                     }
-                    .transition(.opacity)
-                } else {
-                    Spacer().frame(width: 18)
                 }
                 
                 Spacer()
                 
-                if selectedIndex < max(0, menus.count - 1) {
-                    Button {
+                MenuCarouselChevronButton(
+                    type: .next,
+                    isShowing: selectedIndex < max(0, menus.count - 1)
+                ) {
+                    withAnimation(.easeInOut(duration: 0.25)) {
                         selectedIndex += 1
-                    } label: {
-                        Image(systemName: "chevron.right")
-                            .resizable()
-                            .frame(width: 18, height: 29)
-                            .foregroundStyle(Color.afGray400)
                     }
-                    .transition(.opacity)
-                } else {
-                    Spacer().frame(width: 18)
                 }
             }
-            .safeAreaPadding(.horizontal, 16)
         }
     }
     
