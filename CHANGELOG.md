@@ -11,6 +11,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- 메인 뷰 식단 섹션의 쉐브론 버튼의 터치 영역을 넓혔습니다.
+
 ### Deprecated
                                                   
 ### Removed
