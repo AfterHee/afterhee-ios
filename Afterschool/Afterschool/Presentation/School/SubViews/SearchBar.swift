@@ -7,10 +7,16 @@
 
 import SwiftUI
 
+// MARK: - NotificationCenter Extension
+extension Notification.Name {
+    static let dismissKeyboard = Notification.Name("dismissKeyboard")
+}
+
 /// 검색바 컴포넌트
 struct SearchBar: View {
     @Binding var searchText: String
     let placeholder: String
+    @FocusState private var isFocused: Bool
     
     var body: some View {
         HStack(spacing: 12) {
@@ -22,6 +28,7 @@ struct SearchBar: View {
                 .font(.afRegular16)
                 .foregroundColor(.afBlack)
                 .textFieldStyle(PlainTextFieldStyle())
+                .focused($isFocused)
             
             if !searchText.isEmpty {
                 Button(action: {
@@ -34,9 +41,17 @@ struct SearchBar: View {
             }
         }
         .padding(.horizontal, 16)
-        .padding(.vertical, 14)
+        .frame(height: 44)
         .background(Color.afGray50)
         .cornerRadius(8)
+        .onReceive(NotificationCenter.default.publisher(for: .dismissKeyboard)) { _ in
+            dismissKeyboard()
+        }
+    }
+    
+    /// 키보드를 내리는 메서드
+    func dismissKeyboard() {
+        isFocused = false
     }
 }
 

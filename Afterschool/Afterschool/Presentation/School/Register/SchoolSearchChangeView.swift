@@ -93,8 +93,7 @@ struct SchoolSearchChangeView: View {
 
                         if school.id != viewModel.searchResults.last?.id {
                             Divider()
-                                .background(Color.afGray100)
-                                .padding(.horizontal, 20)
+                                .background(Color.afGray50)
                         }
                     }
                 }
